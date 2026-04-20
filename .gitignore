@@ -1,0 +1,6 @@
+# cmake build
+/build
+
+# save data
+mc_high.dat
+mc_opts.dat

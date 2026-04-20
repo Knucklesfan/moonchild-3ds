@@ -1,3 +1,0 @@
-/Users/reinier/Data/sdl/moonchild_portable/build/CMakeFiles/moonchild_shell.dir
-/Users/reinier/Data/sdl/moonchild_portable/build/CMakeFiles/edit_cache.dir
-/Users/reinier/Data/sdl/moonchild_portable/build/CMakeFiles/rebuild_cache.dir
