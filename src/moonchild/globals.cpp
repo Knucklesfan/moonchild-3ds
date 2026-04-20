@@ -756,4 +756,5 @@ LEVEL_DESCR levels[5][4] =
   }
 };
 
-
+// moonchild-sr: speedrun state
+speedrun_state sr_state;

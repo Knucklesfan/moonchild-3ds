@@ -1,3 +1,6 @@
+#ifndef MOONCHILD_GLOBALS_HPP
+#define MOONCHILD_GLOBALS_HPP
+
 #include <frm_wrk.hpp>
 #include <vgdll.hpp>
 #include <mc.hpp>
@@ -277,3 +280,12 @@ extern LEVEL_DESCR levels[5][4];
 #define VK_ESCAPE 'Q'
 #define VK_RETURN 'R'
 
+// moonchild-sr: speedrun state
+struct speedrun_state
+{
+  UINT32 lvtime[4 * 5] {};
+  UINT32 gtime {};
+};
+extern speedrun_state sr_state;
+
+#endif

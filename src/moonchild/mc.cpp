@@ -2610,6 +2610,13 @@ HEARTBEAT_FN MC_heartbeat(void)
 
   rebuild(&player1);
 //      rebuild(&player2);
+
+  // moonchild-sr: speedrun timer update
+  {
+    int curlv = world*4+level;
+    sr_state.lvtime[curlv] += 1; // time is measured in ticks
+    sr_state.gtime += 1;
+  }
   
   return (HEARTBEAT_FN) MC_heartbeat;
 }
@@ -7360,6 +7367,9 @@ HEARTBEAT_FN MC_endsequence(void)
   //  player1.delayscore = 0;
   player1.lives = 3;
   player1.newlife = 0;          // when it reaches 32 you gain a life
+  // moonchild-sr: reset TA timers
+  sr_state.gtime = 0;
+  memset(sr_state.lvtime, 0, sizeof(sr_state.lvtime));
 
 #if 1      // remember all black diamonds gained, but not the diamonds picked up with 1 go
   scoreblacksperlevel[0]  = 0;

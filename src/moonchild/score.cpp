@@ -39,6 +39,38 @@ void score_display(VIEWPORT *player)
   realycnt += 18;
   realycnt &= 1023;
 
+  // moonchild-sr: Draw game timer
+  {
+    UINT16 curlv = world*4 + level;
+    UINT32 ticks = sr_state.gtime;
+    UINT32 total_seconds = ticks / 60;
+    UINT32 hundredths = (ticks * 100 / 60) % 100;
+    UINT16 secs = total_seconds % 60;
+    UINT16 mins = total_seconds / 60;
+
+    frame = anim_setsequence(orgscore, 0, SEQ_FORCE);
+
+    frame = anim_forceframe (orgscore, mins / 10);
+    frame->draw(*player->loadedmap->blitbuf, 8 + (0*40), 8);
+
+    frame = anim_forceframe (orgscore, mins % 10);
+    frame->draw(*player->loadedmap->blitbuf, 8 + (1*40), 8);
+
+
+    frame = anim_forceframe (orgscore, secs / 10);
+    frame->draw(*player->loadedmap->blitbuf, 24 + (2*40), 8);
+
+    frame = anim_forceframe (orgscore, secs % 10);
+    frame->draw(*player->loadedmap->blitbuf, 24 + (3*40), 8);
+
+
+    frame = anim_forceframe (orgscore, hundredths / 10);
+    frame->draw(*player->loadedmap->blitbuf, 40 + (4*40), 8);
+
+    frame = anim_forceframe (orgscore, hundredths % 10);
+    frame->draw(*player->loadedmap->blitbuf, 40 + (5*40), 8);
+  }
+
 #if 0
   deler = 100000;
   score = player->delayscore;
