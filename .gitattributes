@@ -1,0 +1,9 @@
+*.c text=auto
+*.cpp text=auto
+*.h text=auto
+*.hpp text=auto
+*.txt text=auto
+*.cmake text=auto
+*.md text=auto
+.editorconfig text=auto
+.gitignore text=auto
