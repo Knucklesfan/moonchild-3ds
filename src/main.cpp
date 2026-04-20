@@ -60,8 +60,8 @@ bool initSDL() {
   tickIntervalTicks = performanceFrequency / (Uint64)ticksPerSecond;
   nextTickTime = SDL_GetPerformanceCounter();
 
-  window = SDL_CreateWindow("moonchild shell", SDL_WINDOWPOS_UNDEFINED,
-                            SDL_WINDOWPOS_UNDEFINED, screenWidth, screenHeight, 0);
+  window = SDL_CreateWindow("Moon Child", SDL_WINDOWPOS_CENTERED,
+                            SDL_WINDOWPOS_CENTERED, screenWidth, screenHeight, SDL_WINDOW_RESIZABLE);
   if (!window) {
     fprintf(stderr, "SDL_CreateWindow failed: %s\n", SDL_GetError());
     return false;
@@ -72,6 +72,8 @@ bool initSDL() {
     fprintf(stderr, "SDL_CreateRenderer failed: %s\n", SDL_GetError());
     return false;
   }
+  SDL_RenderSetLogicalSize(renderer, screenWidth, screenHeight);
+  SDL_RenderSetVSync(renderer, 1);
 
   frameTexture =
       SDL_CreateTexture(renderer, SDL_PIXELFORMAT_BGRA32, SDL_TEXTUREACCESS_STREAMING,
@@ -183,6 +185,11 @@ int main(int argc, char **argv) {
           case SDL_SCANCODE_P:
             keyDown(SDL_SCANCODE_P);
           break;
+          case SDL_SCANCODE_RETURN:
+            if (e.key.keysym.mod & KMOD_ALT) {
+              SDL_SetWindowFullscreen(window, SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN_DESKTOP ? 0 : SDL_WINDOW_FULLSCREEN_DESKTOP);
+            }
+            break;
           default:
             break;
         }
