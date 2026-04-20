@@ -1,3 +1,44 @@
+# Moon Child SR
+
+This is a version of the 1997 Windows 95 game Moon Child adjusted and modernized, itself based on the original team's SDL2 source release on April 19, 2026. It specifically focuses on portability and features supporting speedrunners.
+
+## New features over original release
+
+- Gamepad integration via SDL
+- Fullscreen toggle (alt+enter)
+- 22kHz sound effects from 1997 Windows version (ripped by @cookedmonty.bsky.social from the EXE)
+- Full support for XDG paths and env overrides:
+  - MOONCHILD_ASSETS_PATH, XDG_DATA_HOME, XDG_DATA_DIRS for assets. Falls back to SDL base path and working directory.
+  - MOONCHILD_SAVE_PATH, XDG_CONFIG_HOME for options and high scores
+  - Note, this means opts/high dats are saved to the user's home directory in `.config/moonchild` by default.
+
+### Planned features
+
+(bit of a stretch to say "planned", only for as much as this [strange mood][sm] lasts)
+
+- Restored video playback
+- Precise game timers for IL and total time
+- [LiveSplit Server][lss] integration
+- [Archipelago](https://archipelago.gg/) mode
+- 50Hz/60Hz toggle; the game likely was supposed to run at 50Hz, not 60
+- Remove SDL_mixer and use a small inline mixer w/ minimp3 instead
+
+[sm]: https://dwarffortresswiki.org/index.php/Strange_mood
+[lss]: https://github.com/LiveSplit/LiveSplit/blob/master/README.md#the-livesplit-server
+
+## Building
+
+As of this writing Release builds have misoptimizations with clang that prevent them from being used. Debug builds are fine as-is.
+
+```bash
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
+cmake --build build
+```
+
+---
+
+Original README.md below.
+
 #  Moon Child
 SDL portable version
 
