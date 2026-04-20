@@ -52,7 +52,7 @@ void advanceTickSchedule() {
 }
 
 bool initSDL() {
-  if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER) != 0) {
+  if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) != 0) {
     fprintf(stderr, "SDL_Init failed: %s\n", SDL_GetError());
     return false;
   }
@@ -219,6 +219,72 @@ int main(int argc, char **argv) {
             break;
           case SDL_SCANCODE_P:
             keyUp(SDL_SCANCODE_P);
+            break;
+          default:
+            break;
+        }
+      }
+      if (e.type == SDL_CONTROLLERDEVICEADDED) {
+        SDL_GameController* c = SDL_GameControllerOpen(e.cdevice.which);
+      }
+      if (e.type == SDL_CONTROLLERDEVICEREMOVED) {
+        SDL_GameControllerClose(SDL_GameControllerFromInstanceID(e.cdevice.which));
+      }
+      if (e.type == SDL_CONTROLLERBUTTONDOWN && SDL_GameControllerGetPlayerIndex(SDL_GameControllerFromInstanceID(e.cbutton.which)) == 0) {
+        switch (e.cbutton.button) {
+          case SDL_CONTROLLER_BUTTON_DPAD_UP:
+            keyDown(SDL_SCANCODE_UP);
+            break;
+          case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
+            keyDown(SDL_SCANCODE_DOWN);
+            break;
+          case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
+            keyDown(SDL_SCANCODE_LEFT);
+            break;
+          case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
+            keyDown(SDL_SCANCODE_RIGHT);
+            break;
+          case SDL_CONTROLLER_BUTTON_A:
+            keyDown(SDL_SCANCODE_UP);
+            break;
+          case SDL_CONTROLLER_BUTTON_X:
+            keyDown(SDL_SCANCODE_SPACE);
+            break;
+          case SDL_CONTROLLER_BUTTON_START:
+            keyDown(SDL_SCANCODE_SPACE);
+            break;
+          case SDL_CONTROLLER_BUTTON_BACK:
+            keyDown(SDL_SCANCODE_ESCAPE);
+            break;
+          default:
+            break;
+        }
+      }
+      if (e.type == SDL_CONTROLLERBUTTONUP && SDL_GameControllerGetPlayerIndex(SDL_GameControllerFromInstanceID(e.cbutton.which)) == 0) {
+        switch (e.cbutton.button) {
+          case SDL_CONTROLLER_BUTTON_DPAD_UP:
+            keyUp(SDL_SCANCODE_UP);
+            break;
+          case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
+            keyUp(SDL_SCANCODE_DOWN);
+            break;
+          case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
+            keyUp(SDL_SCANCODE_LEFT);
+            break;
+          case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
+            keyUp(SDL_SCANCODE_RIGHT);
+            break;
+          case SDL_CONTROLLER_BUTTON_A:
+            keyUp(SDL_SCANCODE_UP);
+            break;
+          case SDL_CONTROLLER_BUTTON_X:
+            keyUp(SDL_SCANCODE_SPACE);
+            break;
+          case SDL_CONTROLLER_BUTTON_START:
+            keyUp(SDL_SCANCODE_SPACE);
+            break;
+          case SDL_CONTROLLER_BUTTON_BACK:
+            keyUp(SDL_SCANCODE_ESCAPE);
             break;
           default:
             break;
