@@ -19,7 +19,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "fastfile.h"
-#include "Mydefs.hpp"
+#include "mydefs.hpp"
 
 // strip the directory path of all files provided to open
 #define USEBASENAME 1
