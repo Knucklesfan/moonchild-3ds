@@ -94,6 +94,12 @@ VG_BOOLEAN PCX_ff_load(char *fname, BYTE *buffer, BYTE *palette)
 		rc = FastFileRead(fp, palette, 768);
 //		vgassert(rc);
     }
+
+	if (buffer == NULL)
+	{
+		rc = FastFileClose(fp);
+		return VG_TRUE;
+	}
 	
 	// Load the picture data
 	if (buffer)
