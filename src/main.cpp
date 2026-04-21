@@ -12,6 +12,7 @@
 #include "frm_int.hpp"
 
 #include "livesplit.hpp"
+#include "zed_net.h"
 
 namespace {
 
@@ -138,7 +139,7 @@ void syncMouse() {
 
 }  // namespace
 
-int main(int argc, char **argv) {
+int SDL_main(int argc, char **argv) {
   (void)argc;
   (void)argv;
 
@@ -150,6 +151,9 @@ int main(int argc, char **argv) {
     shutdownAudio();
     shutdownSDL();
     return 1;
+  }
+  if (zed_net_init() < 0) {
+    fprintf(stderr, "zed_net init failed: %s\n", zed_net_get_error());
   }
 
   initMoonChild(pixelBuffer, screenWidth, screenHeight);
@@ -310,6 +314,7 @@ int main(int argc, char **argv) {
   }
 
   livesplit::Quit();
+  zed_net_shutdown();
   shutdownAudio();
   shutdownSDL();
   return 0;

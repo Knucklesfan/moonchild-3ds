@@ -30,6 +30,9 @@ target_include_directories(moonchild PRIVATE
 )
 
 target_link_libraries(moonchild PRIVATE
-  SDL2::SDL2
+  SDL2::SDL2 SDL2::SDL2main
   SDL2_mixer::SDL2_mixer
 )
+if(WIN32)
+  target_link_libraries(moonchild PRIVATE Ws2_32)
+endif()

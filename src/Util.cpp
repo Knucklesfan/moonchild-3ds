@@ -6,6 +6,10 @@
 #include <errno.h>
 #include <framewrk/frm_int.hpp>
 
+#ifdef _WIN32
+#  include <direct.h> // _mkdir
+#endif
+
 using std::string;
 
 namespace {

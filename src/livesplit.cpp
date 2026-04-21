@@ -1,5 +1,6 @@
 #include "livesplit.hpp"
 
+#include <cstdio>
 #include <string>
 
 #include "zed_net.h"
@@ -10,14 +11,18 @@ static zed_net_socket_t g_socket;
 static bool g_connected;
 
 void livesplit::Init(const char* host, uint16_t port) {
-  zed_net_init();
-  zed_net_address_t addr;
-  if (!zed_net_get_address(&addr, host, port)) {
+  int ret;
+  zed_net_address_t addr {};
+  if (zed_net_get_address(&addr, host, port) < 0) {
+    fprintf(stderr, "LiveSplit: could not connect (failed to resolve): %s\n", zed_net_get_error());
     return;
   }
-  if (!zed_net_tcp_connect(&g_socket, addr)) {
+  memset(&g_socket, 0, sizeof(g_socket));
+  if ((ret = zed_net_tcp_connect(&g_socket, addr)) != 0) {
+    fprintf(stderr, "LiveSplit: could not connect (failed to connect): %d %s\n", ret, zed_net_get_error());
     return;
   }
+  fprintf(stderr, "Connected to LiveSplit on %s:%u\n", host, port);
   g_connected = true;
 }
 
@@ -45,6 +50,7 @@ void livesplit::SendSplitConfig() {
 void livesplit::SendStart() {
   if (!g_connected) return;
   zed_net_tcp_socket_send(&g_socket, "starttimer\n", 11);
+  fprintf(stderr, "LiveSplit: start\n");
 }
 
 void livesplit::SendSplit(uint32_t time) {
@@ -57,16 +63,19 @@ void livesplit::SendSplit(uint32_t time) {
   uint32_t milliseconds = total_milliseconds % 1000;
   snprintf(fmt, sizeof(fmt), "setgametime %u:%02u:%02u.%03u\n", hours, minutes, seconds, milliseconds);
   zed_net_tcp_socket_send(&g_socket, fmt, strlen(fmt));
+  fprintf(stderr, "LiveSplit: split time set\n");
 }
 
 void livesplit::SendPause() {
   if (!g_connected) return;
   zed_net_tcp_socket_send(&g_socket, "pause\n", 6);
+  fprintf(stderr, "LiveSplit: pause\n");
 }
 
 void livesplit::SendReset() {
   if (!g_connected) return;
   zed_net_tcp_socket_send(&g_socket, "reset\n", 6);
+  fprintf(stderr, "LiveSplit: reset\n");
 }
 
 void livesplit::SendPauseGameTime() {
@@ -82,5 +91,4 @@ void livesplit::SendUnpauseGameTime() {
 void livesplit::Quit() {
   g_connected = false;
   zed_net_socket_close(&g_socket);
-  zed_net_shutdown();
 }
