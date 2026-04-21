@@ -120,6 +120,8 @@ int	  FirstTimeShowCredzFlg;
 #include <glim.hpp>
 #include <time.h>
 
+#include "../livesplit.hpp"
+
 
 #define PARA
 
@@ -1559,6 +1561,7 @@ HEARTBEAT_FN MC_nextlevel(void)
   
   
   configure_level(world+1, level+1);   // numbers starting from 1 (not 0)
+  livesplit::SendSplit(sr_state.gtime);
 
 // LOAD LEVEL
 
@@ -6308,6 +6311,7 @@ HEARTBEAT_FN MC_preptitlesequence(void)
 
   world = 5;     // play song 4!    (make it into titletrack (#4!))
   start_cd();
+  livesplit::SendPause();
 
   if (rc == 1) return (HEARTBEAT_FN) MC_showentername;    // highscore entry
 
@@ -7393,6 +7397,10 @@ HEARTBEAT_FN MC_endsequence(void)
 
 	LOG("G\n");
   configure_level(world+1,level+1);
+
+  livesplit::SendReset();
+  livesplit::SendSplitConfig();
+  livesplit::SendStart();
 
   return (HEARTBEAT_FN) MC_preppuzzleselect;
 }

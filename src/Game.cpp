@@ -4,6 +4,7 @@
 #include "moonchild/mc.hpp"
 #include "moonchild/globals.hpp"
 #include "moonchild/prefs.hpp"
+#include "livesplit.hpp"
 
 int g_MouseFlg = 0;
 int g_MouseActualFlg = 0;
@@ -74,6 +75,8 @@ void initMoonChild(unsigned char *pixelBuffer, int width, int height) {
         //EXIT!
         return;
     }
+
+    livesplit::Init("localhost", 16834);
   }
    
   // if someone wants to reset progress (aka start over). This is how to do it

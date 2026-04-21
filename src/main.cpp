@@ -11,6 +11,8 @@
 #define _IN_MAIN
 #include "frm_int.hpp"
 
+#include "livesplit.hpp"
+
 namespace {
 
 int screenWidth = 640;
@@ -307,6 +309,7 @@ int main(int argc, char **argv) {
     advanceTickSchedule();
   }
 
+  livesplit::Quit();
   shutdownAudio();
   shutdownSDL();
   return 0;
