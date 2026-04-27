@@ -1,6 +1,6 @@
 # cmake build
 /build
-
+/assets/moonchild/moonchild
 # save data
 mc_high.dat
 mc_opts.dat

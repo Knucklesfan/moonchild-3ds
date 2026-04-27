@@ -11,8 +11,8 @@
 #define _IN_MAIN
 #include "frm_int.hpp"
 
-#include "livesplit.hpp"
-#include "zed_net.h"
+// #include "livesplit.hpp"
+// #include "zed_net.h"
 
 namespace {
 
@@ -139,7 +139,7 @@ void syncMouse() {
 
 }  // namespace
 
-int SDL_main(int argc, char **argv) {
+int main(int argc, char **argv) {
   (void)argc;
   (void)argv;
 
@@ -152,9 +152,9 @@ int SDL_main(int argc, char **argv) {
     shutdownSDL();
     return 1;
   }
-  if (zed_net_init() < 0) {
-    fprintf(stderr, "zed_net init failed: %s\n", zed_net_get_error());
-  }
+  // if (zed_net_init() < 0) {
+  //   fprintf(stderr, "zed_net init failed: %s\n", zed_net_get_error());
+  // }
 
   initMoonChild(pixelBuffer, screenWidth, screenHeight);
 
@@ -313,8 +313,8 @@ int SDL_main(int argc, char **argv) {
     advanceTickSchedule();
   }
 
-  livesplit::Quit();
-  zed_net_shutdown();
+  // livesplit::Quit();
+  // zed_net_shutdown();
   shutdownAudio();
   shutdownSDL();
   return 0;
