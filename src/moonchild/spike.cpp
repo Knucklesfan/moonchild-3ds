@@ -54,7 +54,7 @@ int spike_live (OBJECT *object, UINT32 param)
 
   spikeblood->y -= (fakespeedadd<<6);
 
-  if (spikeblood->gravy > 480) spikeblood->gravy -= 1;
+  if (spikeblood->gravy > 240) spikeblood->gravy -= 1;
   spikeblood->y += spikeblood->gravy;
   object->x = spikeblood->x;
   object->y = spikeblood->y>>6;

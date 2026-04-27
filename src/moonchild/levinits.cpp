@@ -210,7 +210,7 @@ void init_level_12(void)
 
   bump_init(6640,384,2);
   bump_init(3488,512,2);
-  bump_init(2448,320,0);
+  bump_init(2448,200,0);
 
 
 //  bump_init(2944,544,2);
@@ -247,7 +247,7 @@ void init_level_13(void)
 
 #ifndef POCKETPCDEMO
   gumbal_init(440,7555,6);
-  gumbal_init(320,7555,0);
+  gumbal_init(200,7555,0);
 
   elevat_init(288, 7232, elevat_sinx,  00, 2, 256);
   elevat_init(648, 7232, elevat_sinx, 512, 2, 256);
@@ -379,7 +379,7 @@ void init_level_14(void)
   mushroom_init(6160, 526, 3, 512, 10, 40);
 
   gravlift_init(384-10,1024+4);
-  gravlift_init(320-10,938+4);
+  gravlift_init(200-10,938+4);
   gravlift_init(256-10,832+4);
   gravlift_init(448-10,768+4);
 
@@ -502,7 +502,7 @@ void init_level_21(void)
   ironring_init(500, 3692, ironring_sinx,  00, 4, 256, 0);
   ironring_init(832, 3548, ironring_sinxy, 00, 2, 256, 0);
 
-  chain_init(2102, 3128, 0, 3, 320);
+  chain_init(2102, 3128, 0, 3, 200);
   chain_init(2680, 2068, 1, 4, 400);
 
   helmut_init(2663,2620, 0, &helmut_caps1);
@@ -671,7 +671,7 @@ void init_level_23(void)
 
   ironring_init(160, 13312, ironring_flipflapx,  160,  2000,  1,  64);
   ironring_init(240, 13312, ironring_flipflapx,  240,  2000, 10,  64);
-  ironring_init(320, 13312, ironring_flipflapx,  320,  2000, 20,  64);
+  ironring_init(200, 13312, ironring_flipflapx,  200,  2000, 20,  64);
   ironring_init(400, 13312, ironring_flipflapx,  400,  2000, 30,  64);
   ironring_init(480, 13312, ironring_flipflapx,  480,  2000, 40,  64);
   ironring_init(560, 13312, ironring_flipflapx,  560,  2000, 50,  64);
@@ -680,7 +680,7 @@ void init_level_23(void)
 
   ironring_init(160, 13120, ironring_flipflapx,  160,  2000,  1,  64);
   ironring_init(240, 13120, ironring_flipflapx,  240,  2000, 10,  64);
-  ironring_init(320, 13120, ironring_flipflapx,  320,  2000, 20,  64);
+  ironring_init(200, 13120, ironring_flipflapx,  200,  2000, 20,  64);
   ironring_init(400, 13120, ironring_flipflapx,  400,  2000, 30,  64);
   ironring_init(480, 13120, ironring_flipflapx,  480,  2000, 40,  64);
   ironring_init(560, 13120, ironring_flipflapx,  560,  2000, 50,  64);
@@ -957,7 +957,7 @@ void init_level_24(void)
   paal_init(3232+(7*32), 3936, 1, 128, 128, 12);
   paal_init(3232+(6*32), 3936, 1, 192, 128, 12);
   paal_init(3232+(5*32), 3936, 1, 256, 128, 12);
-  paal_init(3232+(4*32), 3936, 1, 320, 128, 12);
+  paal_init(3232+(4*32), 3936, 1, 200, 128, 12);
   paal_init(3232+(3*32), 3936, 1, 384, 128, 12);
   paal_init(3232+(2*32), 3936, 1, 448, 128, 12);
   paal_init(3232+(1*32), 3936, 1, 512, 128, 12);
@@ -991,7 +991,7 @@ void init_level_24(void)
   paal_init(7328, 2848-352, 1, 0, 128, 12);
 
 //  paal_init(7776, 2816-64, 0, 512, 96, 16);
-//  paal_init(7776, 2880-320-64, 1, 0, 96, 16);
+//  paal_init(7776, 2880-200-64, 1, 0, 96, 16);
 
 
   ironauto_init(3232 , 5920, ironautotab9,  1, 0,1);
@@ -2091,7 +2091,7 @@ void init_level_41(void)
              0,0,0,0, orglev4objects,1,0, 1 /* seq */ ,0,0,0,0,0,0);
   basic_init(8256+256,1656,basic_sin,240,12,32,basic_sin,60,9,128,
              0,0,0,0, orglev4objects,1,0, 1 /* seq */ ,0,0,0,0,0,0);
-  basic_init(8256+320,1656,basic_sin,300,12,32,basic_sin,0,9,128,
+  basic_init(8256+200,1656,basic_sin,300,12,32,basic_sin,0,9,128,
              0,0,0,0, orglev4objects,1,0, 1 /* seq */ ,0,0,0,0,0,0);
 
   basic_init(8824,1850,basic_sin,0,508,128,basic_sin,0,507,48,
@@ -2105,7 +2105,7 @@ void init_level_41(void)
   snake_init (8638, 2281, orglev4objects, 3, 96, 0, 1, 0, &snakelev4f);
 
 
-  basic_init(8170,2244,basic_sin,0,509,320,basic_sin,0,4,18,
+  basic_init(8170,2244,basic_sin,0,509,200,basic_sin,0,4,18,
              0,0,0,0, orglev4objects,1,0, 2 /* seq */ ,0,0,0,0,0,0);
 
   basic_init(8058,2352,basic_sin,0,257,50,basic_sin,256,257,50,
@@ -2162,7 +2162,7 @@ void init_level_41(void)
              0,0,0,0, orglev4objects,1,0, 2 /* seq */ ,0,0,0,0,0,0);
   basic_init (6490,2170,basic_sin,0,4,20,basic_sin,400,11,160,
              0,0,0,0, orglev4objects,1,0, 2 /* seq */ ,0,0,0,0,0,0);
-  basic_init (6410,2170,basic_sin,0,4,20,basic_sin,320,11,160,
+  basic_init (6410,2170,basic_sin,0,4,20,basic_sin,200,11,160,
              0,0,0,0, orglev4objects,1,0, 2 /* seq */ ,0,0,0,0,0,0);
   basic_init (6330,2170,basic_sin,0,4,20,basic_sin,240,11,160,
              0,0,0,0, orglev4objects,1,0, 2 /* seq */ ,0,0,0,0,0,0);
@@ -2266,7 +2266,7 @@ void init_level_00(void)
 {
 
   switsj_init(2461, 608-48, 2496, 992-64,1);
-  basic_init(2269,1369,basic_sin,0,-4,320,basic_sin,0,4,160,
+  basic_init(2269,1369,basic_sin,0,-4,200,basic_sin,0,4,160,
               basic_sin,0,8,32,  orgbat,1,0,SEQ_DUMMY,0,0,0,0,0,prox_bat_volume);
 
   hoi = hoi_globinit(orghoi, &hoi_caps, hoi_ai, 0, 0);

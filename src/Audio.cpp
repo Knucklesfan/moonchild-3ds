@@ -77,8 +77,10 @@ bool initAudio() {
   }
   if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) != 0) {
     fprintf(stderr, "Mix_OpenAudio failed: %s\n", Mix_GetError());
+
     return false;
   }
+
   Mix_AllocateChannels(MAXSOUNDCHANNELS);
   allocatedChannels = MAXSOUNDCHANNELS;
 

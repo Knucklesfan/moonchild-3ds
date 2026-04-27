@@ -53,9 +53,12 @@ void fillTestPattern(uint8_t *pixels, int width, int height, int pitch) {
 
 void initMoonChild(unsigned char *pixelBuffer, int width, int height) {
 	video = new Cvideo();
+
 	audio = new Caudio();  // create audio AFTER window is created!
-	timer = new Ctimer();  // Create timer facilities
-	movie = new Cmovie(audio);  // Initiate movie playback features
+
+  timer = new Ctimer();  // Create timer facilities
+
+  movie = new Cmovie(audio);  // Initiate movie playback features
 	
 	g_SettingsFlg = 0;	//we starten met het settings window off 
 	gbGameLoop = 1;
@@ -67,7 +70,7 @@ void initMoonChild(unsigned char *pixelBuffer, int width, int height) {
         //EXIT!
         return;
     }
-    
+
     heartbeat = framework_InitGame(video, audio, timer, movie);
     
     if (heartbeat == NULL)

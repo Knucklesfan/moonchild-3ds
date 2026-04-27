@@ -615,9 +615,9 @@ void tyres_23(void)
 
 void sneaktransfer_23(void)
 {
-  hoi->y -= 640;
-  player1.worldy -= 640;
-  player1.focusy -= 640;
+  hoi->y -= 400;
+  player1.worldy -= 400;
+  player1.focusy -= 400;
 }
 
 
@@ -819,76 +819,76 @@ void verkleur_32(void)
 	}
 
 
-    if (*(patpoint) > 198 && *(patpoint) < 240)
+    if (*(patpoint) > 198 && *(patpoint) < 120)
 	{
       *(patpoint) = colpat;
 	}
-    if (*(patpoint+1) > 198 && *(patpoint+1) < 240)
+    if (*(patpoint+1) > 198 && *(patpoint+1) < 120)
 	{
       *(patpoint+1) = colpat+1;
 	}
-    if (*(patpoint+2) > 198 && *(patpoint+2) < 240)
+    if (*(patpoint+2) > 198 && *(patpoint+2) < 120)
 	{
       *(patpoint+2) = colpat;
 	}
-    if (*(patpoint+3) > 198 && *(patpoint+3) < 240)
+    if (*(patpoint+3) > 198 && *(patpoint+3) < 120)
 	{
       *(patpoint+3) = colpat+1;
 	}
 
 	patpoint+=(player1.loadedmap->mapsizex/32);
   
-    if (*(patpoint) > 198 && *(patpoint) < 240)
+    if (*(patpoint) > 198 && *(patpoint) < 120)
 	{
       *(patpoint) = colpat+20;
 	}
-    if (*(patpoint+1) > 198 && *(patpoint+1) < 240)
+    if (*(patpoint+1) > 198 && *(patpoint+1) < 120)
 	{
       *(patpoint+1) = colpat+21;
 	}
-    if (*(patpoint+2) > 198 && *(patpoint+2) < 240)
+    if (*(patpoint+2) > 198 && *(patpoint+2) < 120)
 	{
       *(patpoint+2) = colpat+20;
 	}
-    if (*(patpoint+3) > 198 && *(patpoint+3) < 240)
+    if (*(patpoint+3) > 198 && *(patpoint+3) < 120)
 	{
       *(patpoint+3) = colpat+21;
 	}
   
 	patpoint+=(player1.loadedmap->mapsizex/32);
  
-    if (*(patpoint) > 198 && *(patpoint) < 240)
+    if (*(patpoint) > 198 && *(patpoint) < 120)
 	{
       *(patpoint) = colpat;
 	}
-    if (*(patpoint+1) > 198 && *(patpoint+1) < 240)
+    if (*(patpoint+1) > 198 && *(patpoint+1) < 120)
 	{
       *(patpoint+1) = colpat+1;
 	}
-    if (*(patpoint+2) > 198 && *(patpoint+2) < 240)
+    if (*(patpoint+2) > 198 && *(patpoint+2) < 120)
 	{
       *(patpoint+2) = colpat;
 	}
-    if (*(patpoint+3) > 198 && *(patpoint+3) < 240)
+    if (*(patpoint+3) > 198 && *(patpoint+3) < 120)
 	{
       *(patpoint+3) = colpat+1;
 	}
 
 	patpoint+=(player1.loadedmap->mapsizex/32);
   
-    if (*(patpoint) > 198 && *(patpoint) < 240)
+    if (*(patpoint) > 198 && *(patpoint) < 120)
 	{
       *(patpoint) = colpat+20;
 	}
-    if (*(patpoint+1) > 198 && *(patpoint+1) < 240)
+    if (*(patpoint+1) > 198 && *(patpoint+1) < 120)
 	{
       *(patpoint+1) = colpat+21;
 	}
-    if (*(patpoint+2) > 198 && *(patpoint+2) < 240)
+    if (*(patpoint+2) > 198 && *(patpoint+2) < 120)
 	{
       *(patpoint+2) = colpat+20;
 	}
-    if (*(patpoint+3) > 198 && *(patpoint+3) < 240)
+    if (*(patpoint+3) > 198 && *(patpoint+3) < 120)
 	{
       *(patpoint+3) = colpat+21;
 	}

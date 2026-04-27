@@ -111,7 +111,7 @@ int weight_live (OBJECT *object, UINT32 param)
     play_gewicht(object->x, object->y);
     if ((UINT16) (player1.worldy - object->y + 400) < 800)
     {
-      if ((UINT16) (player1.worldx - object->x + 640) < 740)
+      if ((UINT16) (player1.worldx - object->x + 400) < 740)
       {
 	  player1.shakey = -16;
       }

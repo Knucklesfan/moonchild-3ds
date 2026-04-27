@@ -18,7 +18,7 @@ void plof_init(UINT16 x, UINT16 y, UINT16 sequencenr, UINT16 lethal, INT16 spdx,
   plof->blitsizex = 0;
   plof->blitsizey = 0;
 
-	if (((UINT16)(x - hoi->x + 640) < 1280) && ((UINT16)(y - hoi->y + 320) < 640))
+	if (((UINT16)(x - hoi->x + 400) < 1280) && ((UINT16)(y - hoi->y + 200) < 400))
 	{
 		if (sequencenr == 0 && nosound == 0)
 		{

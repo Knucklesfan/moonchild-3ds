@@ -1,6 +1,6 @@
 #include "frm_int.hpp"
 #include "../Audio.h"
-
+#include <string>
 float calcVolume(INT32 volume);
 float calcPan(INT32 pan);
 
@@ -51,8 +51,9 @@ UINT16 Caudio::play_cd(UINT16 tracknr)
     }
     
     if(!track) return 0;
-
-    loadMusicFile(FullAudioPath((char *)track));
+    std::string trackname = "romfs:/audio/";
+    trackname += track;
+    loadMusicFile((char*)trackname.c_str());
     playMusicLooping();
 
 	return 0;

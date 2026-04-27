@@ -106,7 +106,7 @@ int robyn_live (OBJECT *object, UINT32 param)
 
   object->x = robynblood->realx>>4;
 
-  player2.focusx = object->x - 320;
+  player2.focusx = object->x - 200;
   player2.focusy = object->y - 120;
 
 

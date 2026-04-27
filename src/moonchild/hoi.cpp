@@ -1193,7 +1193,7 @@ int hoi_live (OBJECT *object, UINT32 param)
 	}
     }
 
-  if (object->x >= (player1.worldx+640-64))   // force moon child to the left
+  if (object->x >= (player1.worldx+400-64))   // force moon child to the left
     {
       if (autoscrollspd)
 	{
@@ -1201,7 +1201,7 @@ int hoi_live (OBJECT *object, UINT32 param)
 	    {
 	      if (!hoiblood->flashcnt)
 		{
-		  object->x = player1.worldx+640-64;
+		  object->x = player1.worldx+400-64;
 		  if (hoiblood->spdx > 0) hoiblood->spdx = 0;
 		  //		  hoiblood->rightkey = 0;
 		}
@@ -1514,14 +1514,14 @@ int hoi_live (OBJECT *object, UINT32 param)
     }
 
 
-  if (hoiblood->spdx > 240)
+  if (hoiblood->spdx > 120)
     {
-      hoiblood->spdx = 240;
+      hoiblood->spdx = 120;
     }
 
-  if (hoiblood->spdx < -240)
+  if (hoiblood->spdx < -120)
     {
-      hoiblood->spdx = -240;
+      hoiblood->spdx = -120;
     }
 
   if (hoiblood->spdx > hoiblood->hoi_caps->maxspd && hoiblood->spdx < hoiblood->hoi_caps->maxspd+6)
@@ -2837,7 +2837,7 @@ void hoirise_init(OBJECT *newhoi, UINT16 sx, UINT16 sy, UINT16 dx, UINT16 dy)
   if ((sx == dx) && (sy == dy))
   {
 	hoiriseblood->distance = 0;
-	hoiriseblood->size = 320;
+	hoiriseblood->size = 200;
       hoiriseblood->sinxspd = 5;
       hoiriseblood->sinyspd = 4;
 	hoiriseblood->deathcnt = 0;
@@ -2946,8 +2946,8 @@ int hoirise_live (OBJECT *object, UINT32 param)
 
 		//            plotapix(px,py,*(moonsurface));
 
-	      if (px >= 640) goto skip;
-	      if (py >= 480) goto skip;
+	      if (px >= 400) goto skip;
+	      if (py >= 240) goto skip;
 
 #if 1  // moet nog geprogged worden!
 
@@ -2997,8 +2997,8 @@ int hoirise_live (OBJECT *object, UINT32 param)
 
 		//            plotapix(px,py,*(moonsurface));
 
-	      if (px >= 640) goto skip2;
-	      if (py >= 480) goto skip2;
+	      if (px >= 400) goto skip2;
+	      if (py >= 240) goto skip2;
 
 #if 1  // moet nog geprogged worden!
 
@@ -3260,8 +3260,8 @@ int hoicollapse_live (OBJECT *object, UINT32 param)
 
 	      //            plotapix(px,py,*(moonsurface));
 
-	      //  if (px > 640) goto skip;
-	      if (py > 480) goto skip;
+	      //  if (px > 400) goto skip;
+	      if (py > 240) goto skip;
 
 #if 0
 

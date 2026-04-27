@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
-
+add_compile_definitions(__3DS__)
 find_package(SDL2 CONFIG REQUIRED)
 find_package(SDL2_mixer CONFIG REQUIRED)
 
@@ -31,7 +31,7 @@ target_include_directories(moonchild PRIVATE
 
 target_link_libraries(moonchild PRIVATE
   SDL2::SDL2 SDL2::SDL2main
-  SDL2_mixer::SDL2_mixer
+  SDL2_mixer
 )
 if(WIN32)
   target_link_libraries(moonchild PRIVATE Ws2_32)

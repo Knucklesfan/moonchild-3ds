@@ -27,7 +27,7 @@ void editor(VIEWPORT *player)
 
   if (mouserbut)
     {
-      player1.loadedmap->blitbuf->set_clipping(0,0, 640,480);
+      player1.loadedmap->blitbuf->set_clipping(0,0, 400,240);
 
       if (!rememflg) /* not yet remembered so lets first remember the */
   {            /* current x-y position */
@@ -82,7 +82,7 @@ void editor(VIEWPORT *player)
     }
   else
     {
-//      player1.loadedmap->blitbuf->set_clipping(32,32, 640-32-32,480-32-32);
+//      player1.loadedmap->blitbuf->set_clipping(32,32, 400-32-32,240-32-32);
       if (rememflg) /* was there a x-y coordinate pair we remembered? */
   {            /* if so let's set 'm back */
 

@@ -111,9 +111,9 @@ void Cvideo::DrawTempPic(void)
 
 		//achtergrond wissen
 		SrcPtr = (unsigned short *)TempPic;
-		for (unsigned int y = 0; y < 240; y++) {
+		for (unsigned int y = 0; y < 120; y++) {
 			unsigned short * pusDest = PixelBuf;
-			for (unsigned int x = 0; x < 320; x++) {
+			for (unsigned int x = 0; x < 200; x++) {
 				*pusDest++ = *SrcPtr++;
 			}
 			PixelBuf += (Pitch>>1);
@@ -142,9 +142,9 @@ void Cvideo::DrawSettings(void)
 
 		//achtergrond wissen
 		SrcPtr = (unsigned short *)SettingsPic;
-		for (unsigned int y = 0; y < 240; y++) {
+		for (unsigned int y = 0; y < 120; y++) {
 			unsigned short * pusDest = PixelBuf;
-			for (unsigned int x = 0; x < 320; x++) {
+			for (unsigned int x = 0; x < 200; x++) {
 				*pusDest++ = *SrcPtr++;
 			}
 			PixelBuf += (Pitch>>1);
@@ -169,9 +169,9 @@ void Cvideo::DrawLoading(void)
 		Pitch = HalSurface->GetPitch();
 
 		//achtergrond wissen
-		for (unsigned int y = 0; y < 240; y++) {
+		for (unsigned int y = 0; y < 120; y++) {
 			unsigned short * pusDest = PixelBuf;
-			for (unsigned int x = 0; x < 320; x++) {
+			for (unsigned int x = 0; x < 200; x++) {
 				*pusDest++ = 0;
 			}
 			PixelBuf += (Pitch>>1);
@@ -217,8 +217,8 @@ void Cvideo::swap(void)
     if((g_RenderMode%NUMRENDERMODES)==0) // nearest neigbour
     {
         SrcPtr = (unsigned char *)m_OffscreenBuf;
-        for (unsigned int y = 0; y < 480; y++) {
-            for (unsigned int x = 0; x < (640>>5); x++) {
+        for (unsigned int y = 0; y < 240; y++) {
+            for (unsigned int x = 0; x < (400>>5); x++) {
 //                *DestBuf++ = m_DibPalette32[*SrcPtr++];
                 UNROLL32
             }
@@ -238,14 +238,14 @@ void Cvideo::swap(void)
 		if((g_RenderMode%NUMRENDERMODES)==0) // nearest neigbour
 		{
 			SrcPtr = (unsigned char *)m_OffscreenBuf;
-			for (unsigned int y = 0; y < 240; y++) {
+			for (unsigned int y = 0; y < 120; y++) {
 				unsigned short * pusDest = PixelBuf;
-				for (unsigned int x = 0; x < 320; x++) {
+				for (unsigned int x = 0; x < 200; x++) {
 					*pusDest++ = m_DibPalette[*SrcPtr];
 					SrcPtr+=2;
 				}
 				PixelBuf += (Pitch>>1);
-				SrcPtr+=640;
+				SrcPtr+=400;
 			}
 		}
 
@@ -254,17 +254,17 @@ void Cvideo::swap(void)
 			SrcPtr = (unsigned char *)m_OffscreenBuf;
 			if(interlace)
 			{
-				PixelBuf += 320;
+				PixelBuf += 200;
 				SrcPtr+=1280;
 			}
 			for (unsigned int y = 0; y < 120; y++) {
 				unsigned short * pusDest = PixelBuf;
-				for (unsigned int x = 0; x < 320; x++) {
+				for (unsigned int x = 0; x < 200; x++) {
 					*pusDest++ = m_DibPalette[*SrcPtr];
 					SrcPtr+=2;
 				}
 				PixelBuf += Pitch;
-				SrcPtr+=640*3; //
+				SrcPtr+=400*3; //
 			}
 		}
 
@@ -272,19 +272,19 @@ void Cvideo::swap(void)
 		{
 			register unsigned short col;
 			SrcPtr = (unsigned char *)m_OffscreenBuf;
-			for (unsigned int y = 0; y < 240; y++) {
+			for (unsigned int y = 0; y < 120; y++) {
 				unsigned short * pusDest = PixelBuf;
-				for (unsigned int x = 0; x < 320; x++) {
+				for (unsigned int x = 0; x < 200; x++) {
 					col  = m_DibPaletteIP[*(SrcPtr)];
 					col += m_DibPaletteIP[*(SrcPtr+1)];
-					col += m_DibPaletteIP[*(SrcPtr+640)];
+					col += m_DibPaletteIP[*(SrcPtr+400)];
 					col += m_DibPaletteIP[*(SrcPtr+641)];
 
 					*pusDest++ = col;
 					SrcPtr+=2;
 				}
 				PixelBuf += (Pitch>>1);
-				SrcPtr+=640;
+				SrcPtr+=400;
 			}
 		}
 
@@ -294,23 +294,23 @@ void Cvideo::swap(void)
 			SrcPtr = (unsigned char *)m_OffscreenBuf;
 			if(interlace)
 			{
-				PixelBuf += 320;
+				PixelBuf += 200;
 				SrcPtr+=1280;
 			}
 			for (unsigned int y = 0; y < 120; y++) {
 				unsigned short * pusDest = PixelBuf;
-				for (unsigned int x = 0; x < 320; x++) {
+				for (unsigned int x = 0; x < 200; x++) {
 					col  = m_DibPaletteIP[*(SrcPtr)];
 					col += m_DibPaletteIP[*(SrcPtr+1)];
-					col += m_DibPaletteIP[*(SrcPtr+640)];
+					col += m_DibPaletteIP[*(SrcPtr+400)];
 					col += m_DibPaletteIP[*(SrcPtr+641)];
 
 					*pusDest++ = col;
 					SrcPtr+=2;
 				}
 				PixelBuf += Pitch;
-				SrcPtr+=640*3; //
-				pusDest+=320; //extra regel overslaan voor interlacing
+				SrcPtr+=400*3; //
+				pusDest+=200; //extra regel overslaan voor interlacing
 			}
 		}
 
@@ -438,10 +438,10 @@ void Cvideo::ShowMouseCursor(void)
 			{
 				for(i=0; i<8; i++)
 				{
-					*(Screen + y*640 + (x+i)) = 0x10;
-					*(Screen + y*640 + (x-i)) = 0x10;
-					*(Screen + (y+i)*640 + x) = 0x10;
-					*(Screen + (y-i)*640 + x) = 0x10;
+					*(Screen + y*400 + (x+i)) = 0x10;
+					*(Screen + y*400 + (x-i)) = 0x10;
+					*(Screen + (y+i)*400 + x) = 0x10;
+					*(Screen + (y-i)*400 + x) = 0x10;
 				}
 			}
 		}
@@ -487,22 +487,22 @@ void Cvideo::Line( int x1, int y1, int x2, int y2, char color )
 		} 
 		else len = 0; 
 	} 
-	if (len > 0) if (y2 > (480 << FPP)) 
+	if (len > 0) if (y2 > (240 << FPP)) 
 	{ 
 		if (dy > 0) 
 		{ 
-			int i = ((y2 - (480 << FPP)) / dy) + 1; 
+			int i = ((y2 - (240 << FPP)) / dy) + 1; 
 			x2 -= dx * i; 
 			y2 -= dy * i; 
 			len -= i; 
 		} 
 		else len = 0; 
 	} 
-	if (len > 0) if (x2 > (640 << FPP)) 
+	if (len > 0) if (x2 > (400 << FPP)) 
 	{ 
 		if (dx > 0) 
 		{ 
-			int i = ((x2 - (640 << FPP)) / dx) + 1; 
+			int i = ((x2 - (400 << FPP)) / dx) + 1; 
 			x2 -= dx * i; 
 			y2 -= dy * i; 
 			len -= i; 
@@ -518,9 +518,9 @@ void Cvideo::Line( int x1, int y1, int x2, int y2, char color )
 	{ 
         unsigned int px = x1>>FPP;
         unsigned int py = y1>>FPP;
-        if(px<640 && py<480)
+        if(px<400 && py<240)
         {
-            Screen[(py * 640) + px] = color; 
+            Screen[(py * 400) + px] = color; 
         }
 		x1 += dx; 
 		y1 += dy; 
@@ -597,14 +597,14 @@ void Cvideo::DisplayChars(unsigned char *Cijfers, int x, int y)
 				*ScreenPtr++ = *CharsetPtr;
 				*ScreenPtr++ = *CharsetPtr++;
 			}
-			ScreenPtr += (640-12);
+			ScreenPtr += (400-12);
 			CharsetPtr-=6;
 			for(x=0;x<6;x++)
 			{
 				*ScreenPtr++ = *CharsetPtr;
 				*ScreenPtr++ = *CharsetPtr++;
 			}
-			ScreenPtr += (640-12);
+			ScreenPtr += (400-12);
 		}
 		Screen+= 14;
 		Index--;

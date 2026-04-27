@@ -424,7 +424,7 @@ int boss_live (OBJECT *object, UINT32 param)
   
   if (bossblood->hit != 0)   // is ie al dood?
   {
-    if (((UINT16)(xoffset - destx + 320) < 640) && ((UINT16)(yoffset - desty + 320) < 640))
+    if (((UINT16)(xoffset - destx + 200) < 400) && ((UINT16)(yoffset - desty + 200) < 400))
     {
       if ((bossblood->srcx == bossblood->destx) && (bossblood->srcy == bossblood->desty))    // same then spray
 	  {

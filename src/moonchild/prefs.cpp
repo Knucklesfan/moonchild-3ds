@@ -10,7 +10,7 @@ void prefs_calcvals(void)
 {
   prefs_ahead = 0;
 
-  prefs_aheadmax = 240;
+  prefs_aheadmax = 120;
 
 #if 0
   if (prefs->reso == PREFS_LORES)
@@ -19,7 +19,7 @@ void prefs_calcvals(void)
     }
   else
     {
-      prefs_aheadmax = 240;
+      prefs_aheadmax = 120;
     }
 #endif
 }

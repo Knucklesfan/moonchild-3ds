@@ -1,13 +1,12 @@
 #include "Audio.h"
 #include "Game.h"
 #include "Util.h"
-
 #include <SDL.h>
-
+#include <filesystem>
 #include <cstdint>
 #include <cstdio>
 #include <cstring>
-
+#include <dirent.h>
 #define _IN_MAIN
 #include "frm_int.hpp"
 
@@ -16,8 +15,8 @@
 
 namespace {
 
-int screenWidth = 640;
-int screenHeight = 480;
+int screenWidth = 400;
+int screenHeight = 240;
 int bytesPerPixel = 4;
 int ticksPerSecond = 60;
 
@@ -31,6 +30,17 @@ SDL_Texture *frameTexture = nullptr;
 
 uint8_t *pixelBuffer = nullptr;
 int pixelBufferPitch = 0;
+
+#define JOY_A     0
+#define JOY_B     1
+#define JOY_X     2
+#define JOY_Y     3
+#define JOY_PLUS  10
+#define JOY_L 20
+#define JOY_LEFT  5
+#define JOY_UP    6
+#define JOY_RIGHT 4
+#define JOY_DOWN  7
 
 void waitUntilNextTickBoundary() {
   for (;;) {
@@ -55,7 +65,7 @@ void advanceTickSchedule() {
 }
 
 bool initSDL() {
-  if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) != 0) {
+  if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER | SDL_INIT_JOYSTICK) != 0) {
     fprintf(stderr, "SDL_Init failed: %s\n", SDL_GetError());
     return false;
   }
@@ -70,9 +80,10 @@ bool initSDL() {
     return false;
   }
 
-  renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+  renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
   if (!renderer) {
     fprintf(stderr, "SDL_CreateRenderer failed: %s\n", SDL_GetError());
+
     return false;
   }
   SDL_RenderSetLogicalSize(renderer, screenWidth, screenHeight);
@@ -83,13 +94,16 @@ bool initSDL() {
                         screenWidth, screenHeight);
   if (!frameTexture) {
     fprintf(stderr, "SDL_CreateTexture failed: %s\n", SDL_GetError());
+
     return false;
   }
   SDL_SetTextureBlendMode(frameTexture, SDL_BLENDMODE_NONE);
-
+  
   pixelBufferPitch = screenWidth * bytesPerPixel;
   pixelBuffer = new uint8_t[pixelBufferPitch * screenHeight];
   memset(pixelBuffer, 0, pixelBufferPitch * screenHeight);
+	consoleInit(GFX_BOTTOM, NULL);
+  SDL_GameController* c = SDL_GameControllerOpen(0);
 
   return true;
 }
@@ -115,6 +129,7 @@ void shutdownSDL() {
 
 void presentFrame() {
   SDL_UpdateTexture(frameTexture, nullptr, pixelBuffer, pixelBufferPitch);
+  SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
   SDL_RenderClear(renderer);
   SDL_RenderCopy(renderer, frameTexture, nullptr, nullptr);
   SDL_RenderPresent(renderer);
@@ -139,27 +154,60 @@ void syncMouse() {
 
 }  // namespace
 
-int main(int argc, char **argv) {
-  (void)argc;
-  (void)argv;
+int SDL_main(int argc, char **argv) {
+  Result rc = romfsInit();
 
+  printf("initializing game");
   if (!initSDL()) {
+    printf("unable to init sdl");
     shutdownSDL();
     return 1;
   }
+
   if (!initAudio()) {
+    printf("unable to init audio");
+
     shutdownAudio();
     shutdownSDL();
     return 1;
+
   }
   // if (zed_net_init() < 0) {
   //   fprintf(stderr, "zed_net init failed: %s\n", zed_net_get_error());
   // }
+  printf("initializing moonchild\n");
+	if (rc)
+		printf("romfsInit: %08lX\n", rc);
+	else
+	{
+    printf("romfs initialized successfully\n");
+	FILE* f = fopen("romfs:/mc.txt", "r");
+	if (f)
+	{
+		char mystring[100];
+		while (fgets(mystring, sizeof(mystring), f))
+		{
+			int a = strlen(mystring);
+			if (mystring[a-1] == '\n')
+			{
+				mystring[a-1] = 0;
+				if (mystring[a-2] == '\r')
+					mystring[a-2] = 0;
+			}
+			puts(mystring);
+		}
+		fclose(f);
+	}
+
+    printf("dir closed\n");
+
+  }
 
   initMoonChild(pixelBuffer, screenWidth, screenHeight);
 
   bool running = true;
   while (running) {
+    // printf("looping");
     SDL_Event e;
     while (SDL_PollEvent(&e)) {
       if (e.type == SDL_QUIT) {
@@ -230,66 +278,70 @@ int main(int argc, char **argv) {
             break;
         }
       }
-      if (e.type == SDL_CONTROLLERDEVICEADDED) {
-        SDL_GameController* c = SDL_GameControllerOpen(e.cdevice.which);
-      }
-      if (e.type == SDL_CONTROLLERDEVICEREMOVED) {
-        SDL_GameControllerClose(SDL_GameControllerFromInstanceID(e.cdevice.which));
-      }
-      if (e.type == SDL_CONTROLLERBUTTONDOWN && SDL_GameControllerGetPlayerIndex(SDL_GameControllerFromInstanceID(e.cbutton.which)) == 0) {
+      if (e.type == SDL_JOYBUTTONDOWN ) {
+        printf("%d\n",e.cbutton.button);
         switch (e.cbutton.button) {
-          case SDL_CONTROLLER_BUTTON_DPAD_UP:
+          case JOY_UP:
+            printf("SDL_SCANCODE_UP\n");
             keyDown(SDL_SCANCODE_UP);
             break;
-          case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
+          case JOY_DOWN:
+            printf("SDL_SCANCODE_DOWN\n");
             keyDown(SDL_SCANCODE_DOWN);
             break;
-          case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
+          case JOY_LEFT:
+            printf("SDL_SCANCODE_LEFT\n");
             keyDown(SDL_SCANCODE_LEFT);
             break;
-          case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
+          case JOY_RIGHT:
+            printf("SDL_SCANCODE_RIGHT\n");
             keyDown(SDL_SCANCODE_RIGHT);
             break;
-          case SDL_CONTROLLER_BUTTON_A:
+          case JOY_A:
+            printf("SDL_SCANCODE_UP\n");
             keyDown(SDL_SCANCODE_UP);
             break;
-          case SDL_CONTROLLER_BUTTON_X:
+          case JOY_X:
+            printf("SDL_SCANCODE_SPACE\n");
             keyDown(SDL_SCANCODE_SPACE);
             break;
-          case SDL_CONTROLLER_BUTTON_START:
+          case JOY_PLUS:
+            printf("SDL_SCANCODE_SPACE\n");
             keyDown(SDL_SCANCODE_SPACE);
             break;
-          case SDL_CONTROLLER_BUTTON_BACK:
+          case JOY_L:
+            printf("SDL_SCANCODE_ESCAPE\n");
             keyDown(SDL_SCANCODE_ESCAPE);
+
             break;
           default:
             break;
         }
       }
-      if (e.type == SDL_CONTROLLERBUTTONUP && SDL_GameControllerGetPlayerIndex(SDL_GameControllerFromInstanceID(e.cbutton.which)) == 0) {
+      if (e.type == SDL_JOYBUTTONUP) {
         switch (e.cbutton.button) {
-          case SDL_CONTROLLER_BUTTON_DPAD_UP:
+          case JOY_UP:
             keyUp(SDL_SCANCODE_UP);
             break;
-          case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
+          case JOY_DOWN:
             keyUp(SDL_SCANCODE_DOWN);
             break;
-          case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
+          case JOY_LEFT:
             keyUp(SDL_SCANCODE_LEFT);
             break;
-          case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
+          case JOY_RIGHT:
             keyUp(SDL_SCANCODE_RIGHT);
             break;
-          case SDL_CONTROLLER_BUTTON_A:
+          case JOY_A:
             keyUp(SDL_SCANCODE_UP);
             break;
-          case SDL_CONTROLLER_BUTTON_X:
+          case JOY_X:
             keyUp(SDL_SCANCODE_SPACE);
             break;
-          case SDL_CONTROLLER_BUTTON_START:
+          case JOY_PLUS:
             keyUp(SDL_SCANCODE_SPACE);
             break;
-          case SDL_CONTROLLER_BUTTON_BACK:
+          case JOY_L:
             keyUp(SDL_SCANCODE_ESCAPE);
             break;
           default:

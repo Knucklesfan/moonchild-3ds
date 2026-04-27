@@ -64,8 +64,8 @@ UINT32 blackdiamondcollocations[13][7]; //7 per level... 13 levels
 
 UINT16 cliptlx = 0;
 UINT16 cliptly = 0;
-UINT16 clipbrx = 640;
-UINT16 clipbry = 480;
+UINT16 clipbrx = 400;
+UINT16 clipbry = 240;
 
 UINT16 sokomoved;
 UINT16 editflg = 0;            /* we don't start of in the editor */
@@ -305,7 +305,7 @@ MAP_DESCR _patsmap =
 {
   NULL,
   NULL,
-  640,
+  400,
   1632
 };
 
@@ -328,8 +328,8 @@ VIEWPORT player1 =
   0,0,
   0,0,
   0,0,
-//  0,8,640,224,
-  0,60,640,480,
+//  0,8,400,224,
+  0,60,400,240,
 
   0,
   0,
@@ -348,7 +348,7 @@ VIEWPORT player2 =
   0,0,
   0,0,
   0,0,
-  0,248,640,224,
+  0,248,400,224,
 
   0,
   1,
@@ -369,9 +369,9 @@ PREFS defprefs = {
 //  300,
 //  400,
 
-  0,0,640,480,
+  0,0,400,240,
 
-  PREFS_HIRES,
+  PREFS_LORES,
 //  'J',
 //  'L',
 //  'I',
@@ -391,8 +391,8 @@ PREFS defprefs = {
 
 //  0,
 //  0,
-//  640,
-//  480,
+//  400,
+//  240,
 //  PREFS_HIRES,
 //  'a',
 //  'd',
@@ -538,7 +538,7 @@ TRIGGER_ITEM triggerlist_31[] =
 
 TRIGGER_ITEM triggerlist_32[] =
 {
-  {1440, 1332+8, 1440+640, 1332+640, verkleur_32},
+  {1440, 1332+8, 1440+400, 1332+400, verkleur_32},
   { 380, 1010,  428, 1018, resetsoko_32},
   {2742,   20, 2762, 1200, madeit_32},
   {3455,   20, 7000, 1200, reallymadeit_32},

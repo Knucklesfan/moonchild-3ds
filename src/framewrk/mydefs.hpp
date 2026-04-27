@@ -1,5 +1,6 @@
 #ifndef _MYDEFS_H
 #define _MYDEFS_H
+#include <3ds.h>
 
 typedef enum 
 {
@@ -9,11 +10,8 @@ typedef enum
 VG_BOOLEAN;
 
 
-typedef int s32;
-typedef unsigned int u32;
 typedef short s16;
 typedef unsigned short u16;
-typedef char s8;
 typedef unsigned char u8;
 
 typedef unsigned char  UBYTE;

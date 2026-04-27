@@ -102,7 +102,7 @@ void BlitSettingsElement(unsigned short *Src, int PosX, int PosY, int Width, int
 			Pix = Src[(Width-x) + y*Width];
 			if(Pix != 0xf81f)			//transparant?
 			{
-				SettingsPic[(320-(PosX+x)) + (PosY+y)*320] = Pix;
+				SettingsPic[(200-(PosX+x)) + (PosY+y)*200] = Pix;
 			}
 		}
 	}
@@ -187,7 +187,7 @@ void BlitConfig(void)
 	BlitSettingsElement(ButPic[TransformKey(g_KeyConfig.RightKey)],   169,75, 34, 34);
 	BlitSettingsElement(ButPic[TransformKey(g_KeyConfig.LeftKey)],    234,75, 34, 34);
 
-	BlitSettingsElement(SpeakerPic[g_KeyConfig.SoundFlg],   320-55 ,138, 41, 36); //(14)
+	BlitSettingsElement(SpeakerPic[g_KeyConfig.SoundFlg],   200-55 ,138, 41, 36); //(14)
 
 
 	int schakelaar;
@@ -308,7 +308,7 @@ int WINAPI WinMain(	HINSTANCE hInstance,
 						int DeltaX,DeltaY;
 						int SpdX,SpdY;
 						SpdX = SpdY = 0;
-						DeltaX = (320-(g_MouseYCurrent)) - (frmwrk_CenterX/2);
+						DeltaX = (200-(g_MouseYCurrent)) - (frmwrk_CenterX/2);
 						DeltaY = (g_MouseXCurrent) - (frmwrk_CenterY/2);
 						if(DeltaX > MOUSETRESHOLD) SpdX = 1;
 						if(DeltaX < -MOUSETRESHOLD) SpdX = -1;
@@ -466,7 +466,7 @@ int WINAPI WinMain(	HINSTANCE hInstance,
 					g_RenderMode^=2;
 					BlitConfig();
 				}
-				if(g_MouseXDown>138&&g_MouseXDown<174 && g_MouseYDown>(320-55)&&g_MouseYDown<(320-14))
+				if(g_MouseXDown>138&&g_MouseXDown<174 && g_MouseYDown>(200-55)&&g_MouseYDown<(200-14))
 				{
 					if(g_KeyConfig.SoundFlg)g_KeyConfig.SoundFlg=0; else g_KeyConfig.SoundFlg=1;
 					BlitConfig();
@@ -488,7 +488,7 @@ int WINAPI WinMain(	HINSTANCE hInstance,
 			  dc = GetDC(hWnd);
 
 	//		  ShowCursor(FALSE);
-			  if ( !lvideo->on(dc, 640, 480, 256) )
+			  if ( !lvideo->on(dc, 400, 240, 256) )
 			  {
 				PostMessage ( hWnd, WM_CLOSE, 0, 0);        
 				break;

@@ -106,12 +106,12 @@ void hoi_cam(VIEWPORT *player)
   if (player->maxspd == 0) //no override
     {
       player->focusx = player->worldx - spdx;
-      player->focusy = player->worldy - (player->worldy - (hoi->y-236+32)-hoiblood->holddown - hoiblood->yahead) /8;
+      player->focusy = player->worldy - (player->worldy - (hoi->y-118+32)-hoiblood->holddown - hoiblood->yahead) /8;
     }
   else
     {
 	player->focusx = (hoi->x+48-(prefs->screenwidth/2));
-      player->focusy = (hoi->y-236+32)-hoiblood->holddown - hoiblood->yahead;
+      player->focusy = (hoi->y-118+32)-hoiblood->holddown - hoiblood->yahead;
     }
 }
 
@@ -161,10 +161,10 @@ void scrolling(VIEWPORT *player)
   }
       else
   {
-    spdx = ((player->camx-320) - player->worldx)>>4;
+    spdx = ((player->camx-200) - player->worldx)>>4;
     if (spdx == 0)
       {
-        if ((player->camx-320) != player->worldx)
+        if ((player->camx-200) != player->worldx)
     {
       spdx = 1;
     }
@@ -172,10 +172,10 @@ void scrolling(VIEWPORT *player)
     if (spdx >  player->maxspd) spdx =  player->maxspd;
     if (spdx < -player->maxspd) spdx = -player->maxspd;
     
-    spdy = ((player->camy-240) - player->worldy)>>4;
+    spdy = ((player->camy-120) - player->worldy)>>4;
     if (spdy == 0)
       {
-        if ((player->camy-240) != player->worldy)
+        if ((player->camy-120) != player->worldy)
     {
       spdy = 1;
     }
@@ -755,7 +755,7 @@ void visual_updates(void)
 	frame->draw_nokey(*patterntab[222], 0, 0, x+64, y+64, x+96 , y+96);
 	frame->draw_nokey(*patterntab[223], 0, 0, x+96, y+64, x+128, y+96);
 
-	frame->draw_nokey(*patterntab[240], 0, 0, x   , y+96, x+32 , y+128);
+	frame->draw_nokey(*patterntab[120], 0, 0, x   , y+96, x+32 , y+128);
 	frame->draw_nokey(*patterntab[241], 0, 0, x+32, y+96, x+64 , y+128);
 	frame->draw_nokey(*patterntab[242], 0, 0, x+64, y+96, x+96 , y+128);
 	frame->draw_nokey(*patterntab[243], 0, 0, x+96, y+96, x+128, y+128);
@@ -775,7 +775,7 @@ void visual_updates(void)
 //  y++;
 //  y&=63;
 
-//  patsmap->blitbuf->draw(*patsmap->blitbuf, 448, 496, 320+x, 496+y, 320+64+x, 496+64+y);
+//  patsmap->blitbuf->draw(*patsmap->blitbuf, 448, 496, 200+x, 496+y, 200+64+x, 496+64+y);
 }
 
 
@@ -816,8 +816,8 @@ void update(VIEWPORT *player)
           fex = x*32+32-sm_x;
           fey = y*32+32-sm_y;
 
-          if (fex >= 640) fex = 640;
-          if (fey >= 480) fey = 480;
+          if (fex >= 400) fex = 400;
+          if (fey >= 240) fey = 240;
 
           if (fsx >= -32 && fsx < 0)
           {
@@ -831,7 +831,7 @@ void update(VIEWPORT *player)
             fsy = 0;
           }
 
-          if (fsx < 640 && fsy < 480 && fex >= 0 && fey >= 0)
+          if (fsx < 400 && fsy < 240 && fex >= 0 && fey >= 0)
           {
             para->draw_nokey(*player1.loadedmap->blitbuf, sx, sy, fsx, fsy, fex, fey);
           }
@@ -881,8 +881,8 @@ void update(VIEWPORT *player)
           fex = x*32+32-sm_x;
           fey = y*32+32-sm_y;
 
-          if (fex >= 640) fex = 640;
-          if (fey >= 480) fey = 480;
+          if (fex >= 400) fex = 400;
+          if (fey >= 240) fey = 240;
 
           if (fsx >= -32 && fsx < 0)
           {
@@ -896,7 +896,7 @@ void update(VIEWPORT *player)
             fsy = 0;
           }
 
-          if (fsx < 640 && fsy < 480 && fex >= 0 && fey >= 0)
+          if (fsx < 400 && fsy < 240 && fex >= 0 && fey >= 0)
           {
             para->draw_nokey(*player1.loadedmap->blitbuf, sx, sy, fsx, fsy, fex, fey);
           }
@@ -997,7 +997,7 @@ void update(VIEWPORT *player)
   parasurface = (char *)paradc->surface+ 16 + (((player->worldx)/2)&0xfffffffe) + (((player->worldy+player->shakey)/2) * (paradc->mi.xRes+1));
 
 #if 1
-  asm_paralax(destsurface, srcsurface, parasurface, 640, player->height,
+  asm_paralax(destsurface, srcsurface, parasurface, 400, player->height,
         destdc->mi.xRes+1, srcdc->mi.xRes+1, paradc->mi.xRes+1);
 
 
@@ -1129,7 +1129,7 @@ void rebuild(VIEWPORT *player)
 
   MGL_makeCurrentDC(mydc);
 
-  MGL_fillRectCoord(624,0,640,480);
+  MGL_fillRectCoord(624,0,400,240);
 
   MGL_makeCurrentDC(video->get_dc());
 #endif
@@ -1213,8 +1213,8 @@ void plotapix(UINT16 x, UINT16 y, UBYTE col)
   MGLDC *srcdc;
   UBYTE *srcsurface;
 
-  if (x > 640) return;
-  if (y > 480) return;
+  if (x > 400) return;
+  if (y > 240) return;
 
   srcdc = player1.curmap->blitbuf->get_dc();
   srcsurface = (UBYTE *)srcdc->surface;

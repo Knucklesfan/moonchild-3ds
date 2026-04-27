@@ -4,7 +4,7 @@
 #include <string>
 #include <sys/stat.h>
 #include <errno.h>
-#include <framewrk/frm_int.hpp>
+#include <frm_int.hpp>
 
 #ifdef _WIN32
 #  include <direct.h> // _mkdir
@@ -49,90 +49,88 @@ static bool mkpath(const string& path) {
 
 // Called by the game to get the full path to a file
 char *FullPath(char *filename) {
-  string basepath;
   string sfp;
   static string fullpath;
-  char* env;
 
   if (!filename) {
     return nullptr;
   }
 
   sfp = filename;
-  if (sfp.find("audio") != 0 && sfp.find("movies") != 0) {
-    sfp = string("moonchild") + PATH_SEPARATOR + sfp;
-  }
+  fullpath = string("romfs:/")+sfp;
 
-  // Check env override MOONCHILD_ASSETS_PATH
-  env = SDL_getenv("MOONCHILD_ASSETS_PATH");
-  if (env != nullptr) {
-    basepath = env;
-    fullpath = basepath + PATH_SEPARATOR + sfp;
-    if (testfile(fullpath)) {
-      return (char*)fullpath.c_str();
-    }
-  }
+  return (char*)fullpath.c_str();
+ // this function does NOT need to be that complicated \/\/\/
+//   // Check env override MOONCHILD_ASSETS_PATH
+//   env = SDL_getenv("MOONCHILD_ASSETS_PATH");
+//   if (env != nullptr) {
+//     basepath = env;
+//     fullpath = basepath + PATH_SEPARATOR + sfp;
+//     if (testfile(fullpath)) {
+//       return (char*)fullpath.c_str();
+//     }
+//   }
 
-  // Check XDG_DATA_HOME/moonchild/ (or default to HOME/.local/share/moonchild/)
-  env = SDL_getenv("XDG_DATA_HOME");
-  bool skipxdgdata = false;
-  if (env != nullptr) {
-    basepath = string(env);
-  } else {
-    env = SDL_getenv(HOME_ENV_VAR);
-    if (env != nullptr) {
-      basepath = string(env) + PATH_SEPARATOR + ".local" + PATH_SEPARATOR + "share";
-    } else {
-      skipxdgdata = true;
-    }
-  }
-  if (!skipxdgdata) {
-    fullpath = basepath + PATH_SEPARATOR + "moonchild" + PATH_SEPARATOR + sfp;
-    if (testfile(fullpath)) {
-      return (char*)fullpath.c_str();
-    }
-  }
+//   // Check XDG_DATA_HOME/moonchild/ (or default to HOME/.local/share/moonchild/)
+//   env = SDL_getenv("XDG_DATA_HOME");
+//   bool skipxdgdata = false;
+//   if (env != nullptr) {
+//     basepath = string(env);
+//   } else {
+//     env = SDL_getenv(HOME_ENV_VAR);
+//     if (env != nullptr) {
+//       basepath = string(env) + PATH_SEPARATOR + ".local" + PATH_SEPARATOR + "share";
+//     } else {
+//       skipxdgdata = true;
+//     }
+//   }
+//   if (!skipxdgdata) {
+//     fullpath = basepath + PATH_SEPARATOR + "moonchild" + PATH_SEPARATOR + sfp;
+//     if (testfile(fullpath)) {
+//       return (char*)fullpath.c_str();
+//     }
+//   }
 
-#ifndef _WIN32
-  // TODO check XDG_DATA_DIRS with default to /usr/local/share/:/usr/share/
-  const char* xdgDataDirsEnv = SDL_getenv("XDG_DATA_DIRS");
-  string xdgDataDirs;
-  if (xdgDataDirsEnv != nullptr) {
-    xdgDataDirs = xdgDataDirsEnv;
-  } else {
-    xdgDataDirs = "/usr/local/share:/usr/share";
-  }
+// #ifndef _WIN32
+//   // TODO check XDG_DATA_DIRS with default to /usr/local/share/:/usr/share/
+//   const char* xdgDataDirsEnv = SDL_getenv("XDG_DATA_DIRS");
+//   string xdgDataDirs;
+//   if (xdgDataDirsEnv != nullptr) {
+//     xdgDataDirs = xdgDataDirsEnv;
+//   } else {
+//     xdgDataDirs = "/usr/local/share:/usr/share";
+//   }
 
-  const char delimiter = ':';
+//   const char delimiter = ':';
 
-  size_t start = 0;
-  size_t end = xdgDataDirs.find(delimiter);
-  while (end != string::npos) {
-    fullpath = xdgDataDirs.substr(start, end - start) + PATH_SEPARATOR + "moonchild" + PATH_SEPARATOR + sfp;
-    if (testfile(fullpath)) {
-      return (char*)fullpath.c_str();
-    }
-    start = end + 1;
-    end = xdgDataDirs.find(delimiter, start);
-  }
-  fullpath = xdgDataDirs.substr(start) + PATH_SEPARATOR + "moonchild" + PATH_SEPARATOR + sfp;
-  if (testfile(fullpath)) {
-    return (char*)fullpath.c_str();
-  }
-#endif
+//   size_t start = 0;
+//   size_t end = xdgDataDirs.find(delimiter);
+//   while (end != string::npos) {
+//     fullpath = xdgDataDirs.substr(start, end - start) + PATH_SEPARATOR + "moonchild" + PATH_SEPARATOR + sfp;
+//     if (testfile(fullpath)) {
+//       return (char*)fullpath.c_str();
+//     }
+//     start = end + 1;
+//     end = xdgDataDirs.find(delimiter, start);
+//   }
+//   fullpath = xdgDataDirs.substr(start) + PATH_SEPARATOR + "moonchild" + PATH_SEPARATOR + sfp;
+//   if (testfile(fullpath)) {
+//     return (char*)fullpath.c_str();
+//   }
+// #endif
 
-  // Check SDL_GetBasePath/assets/
-  char* basePathCStr = SDL_GetBasePath();
-  if (basePathCStr) {
-    basepath = basePathCStr;
-    SDL_free(basePathCStr);
-    fullpath = basepath + PATH_SEPARATOR + "assets" + PATH_SEPARATOR + sfp;
-    if (testfile(fullpath)) {
-      return (char*)fullpath.c_str();
-    }
-  }
+//   // Check SDL_GetBasePath/assets/
+//   char* basePathCStr = SDL_GetBasePath();
+//   if (basePathCStr) {
+//     basepath = basePathCStr;
+//     SDL_free(basePathCStr);
+//     fullpath = basepath + PATH_SEPARATOR + "assets" + PATH_SEPARATOR + sfp;
+//     if (testfile(fullpath)) {
+//       return (char*)fullpath.c_str();
+//     }
+//   }
 
-  return filename;
+//   return filename;
 }
 
 // Called by the game to get the full path to an audio file
@@ -156,25 +154,9 @@ char *FullWritablePath(char *filename) {
   fullpath = {};
 
   // 1. MOONCHILD_SAVE_PATH (use directly if env var is set)
-  env = SDL_getenv("MOONCHILD_SAVE_PATH");
+  env = "sdmc:/moonchild/";
   if (env != nullptr) {
     basedir = string(env);
-    mkpath(basedir);
-  } else {
-    // 2. XDG_CONFIG_HOME/moonchild/ (or default to HOME/.config/moonchild/)
-    env = SDL_getenv("XDG_CONFIG_HOME");
-    if (env != nullptr) {
-      basedir = string(env);
-    } else {
-      env = SDL_getenv(HOME_ENV_VAR);
-      if (env != nullptr) {
-        basedir = string(env) + PATH_SEPARATOR + ".config";
-      } else {
-        return nullptr;
-      }
-    }
-    mkpath(basedir);
-    basedir = basedir + PATH_SEPARATOR + "moonchild";
     mkpath(basedir);
   }
 
@@ -186,8 +168,7 @@ char *FullWritablePath(char *filename) {
 typedef unsigned char BYTE;
 unsigned short*LoadTGA(char *FileName)
 {
-	char logbuf[100];
-	snprintf(logbuf, sizeof(logbuf), "loading: %s\n", FileName);
+	printf("loading: %s\n", FullPath(FileName));
 //	LOG(logbuf);
     
 	// load targa file
@@ -195,6 +176,7 @@ unsigned short*LoadTGA(char *FileName)
 	bool OK = true;
   FILE *tga = fopen( FullPath(FileName), "rb" );
   if (!tga) return 0;
+  printf("tga opened?\n");
   fread(tgabuff, 20, 1, tga);
   fclose(tga);
 	// gzFile tga = gzopen( FullPath(FileName), "rb" );
@@ -305,7 +287,7 @@ unsigned short*LoadTGA(char *FileName)
     
 	delete [] tgabuff;
     
-//	LOG("tga success\n");
+	printf("tga success\n");
 	return dest;
 }
 

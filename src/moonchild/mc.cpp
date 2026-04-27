@@ -119,7 +119,7 @@ int	  FirstTimeShowCredzFlg;
 #include <sokoban.hpp>
 #include <glim.hpp>
 #include <time.h>
-
+#include <SDL2/SDL.h>
 
 #define PARA
 
@@ -729,9 +729,9 @@ HEARTBEAT_FN MC_testje1(void)
 
 
   video->palette(titlepal);
-	titlepic->draw_nokey(*vidblitbuf,0,0,0,0,640,480);
+	titlepic->draw_nokey(*vidblitbuf,0,0,0,0,400,240);
   video->swap();
-	titlepic->draw_nokey(*vidblitbuf,0,0,0,0,640,480);
+	titlepic->draw_nokey(*vidblitbuf,0,0,0,0,400,240);
 
 
 	return (HEARTBEAT_FN) MC_testje2;
@@ -748,15 +748,10 @@ HEARTBEAT_FN MC_testje2(void)
 
 HEARTBEAT_FN framework_InitGame(Cvideo *newvideo, Caudio *newaudio, Ctimer *newtimer, Cmovie *newmovie)
 {
-	int TestBuf[4];
-	int *TestPtr;
   UINT16 rc;
 
 	  FirstTimeShowCredzFlg = 0;
 
-	TestPtr = TestBuf;
-	TestPtr = (int *)  (((char *)TestPtr)+4);;
-	*TestPtr = 1;
 
   video  = newvideo;  //make video structure global
   audio  = newaudio;  //make audio structure global
@@ -771,15 +766,6 @@ HEARTBEAT_FN framework_InitGame(Cvideo *newvideo, Caudio *newaudio, Ctimer *newt
 
   timerid = 0;
 
-  freevram = video->queryfreevram();
-
-  if (freevram <1100000)
-  {
-//    framework_util_displayerror("Your video card has insufficient VRAM to run Moon Child properly.\nThis results in jerky movement and loss of video performance.\nWe strongly advise you to upgrade your video card to 2MB VRAM.");
-  }
-  
-  freevram = 2000000;      // <------- we force the videoram
-
     memset(gamepal, 0, 768);
     video->palette(gamepal);
   video->clear(0);
@@ -790,7 +776,7 @@ HEARTBEAT_FN framework_InitGame(Cvideo *newvideo, Caudio *newaudio, Ctimer *newt
   video->scansync();
 
   vidblitbuf = new Cblitbuf(video);
-  vidblitbuf->set_clipping(0, 0, 640, 480);
+  vidblitbuf->set_clipping(0, 0, 400, 240);
 
 
 
@@ -804,7 +790,9 @@ HEARTBEAT_FN framework_InitGame(Cvideo *newvideo, Caudio *newaudio, Ctimer *newt
   rc = enablefastfile();   // we start fastfile before changing to other directory!
 
   requestdir();
+
   load_highscores();
+
   load_options();
 
   changetodatadir();    // CD-ROM?
@@ -1123,7 +1111,8 @@ int enablefastfile(void)
   int rc;
   char *debug = FullPath("mc.art");
   fprintf(stderr, "debug: %s\r\n", debug);
-  rc = FastFileInit(FullPath("mc.art"),16);
+
+  rc = FastFileInit("romfs:/mc.art",16);
   if (!rc)
     {
       fprintf(stderr, "couldn't find mc.art\r\n");
@@ -1154,11 +1143,11 @@ int startmovie( char *movname, char *movkadername)
       
   if (vgaflg == 0)
   {
-    movbuf = new Cblitbuf(320,240,0,0,0);   //640*480 if zooming is on!
+    movbuf = new Cblitbuf(200,120,0,0,0);   //400*240 if zooming is on!
   }
   else
   {
-    movbuf = new Cblitbuf(640,480,0,0,0);   //640*480 if zooming is on!
+    movbuf = new Cblitbuf(400,240,0,0,0);   //400*240 if zooming is on!
   }
   
 //  vgassert(movbuf);
@@ -1179,13 +1168,13 @@ int startmovie( char *movname, char *movkadername)
   }
 
   video->clear(0);
-  if (vgaflg == 0)movkaderbuf->draw(*vidblitbuf, 0, 0, 0, 0, 640, 480);
+  if (vgaflg == 0)movkaderbuf->draw(*vidblitbuf, 0, 0, 0, 0, 400, 240);
   video->swap();
   video->clear(0);
-  if (vgaflg == 0)movkaderbuf->draw(*vidblitbuf, 0, 0, 0, 0, 640, 480);
+  if (vgaflg == 0)movkaderbuf->draw(*vidblitbuf, 0, 0, 0, 0, 400, 240);
   video->swap();
   video->clear(0);
-  if (vgaflg == 0)movkaderbuf->draw(*vidblitbuf, 0, 0, 0, 0, 640, 480);
+  if (vgaflg == 0)movkaderbuf->draw(*vidblitbuf, 0, 0, 0, 0, 400, 240);
   video->swap();
 
 //  log_out("opened moviefile: %s",movname);
@@ -1280,7 +1269,7 @@ HEARTBEAT_FN MC_showdemopic(void)
       video->swap();
       video->scansync();
       video->clear(0);
-      demopic->draw(*vidblitbuf, 0, 0, 0, 0, 640, 480);
+      demopic->draw(*vidblitbuf, 0, 0, 0, 0, 400, 240);
       video->palette(gamepal);
     }
 
@@ -1315,7 +1304,7 @@ HEARTBEAT_FN MC_showfirstdemopic(void)
       video->swap();
       video->scansync();
       video->clear(0);
-      demopic->draw(*vidblitbuf, 0, 0, 0, 0, 640, 480);
+      demopic->draw(*vidblitbuf, 0, 0, 0, 0, 400, 240);
       video->palette(gamepal);
     }
 
@@ -1495,15 +1484,15 @@ HEARTBEAT_FN MC_nextlevel(void)
     alldiamspic = new Cblitbuf ("alldiams.pcx", 0, 0);
 	alldiamflg = 1;
     video->clear(0);
-    alldiamspic->draw(*vidblitbuf, 0, 0, 0, 0, 640, 480);
+    alldiamspic->draw(*vidblitbuf, 0, 0, 0, 0, 400, 240);
     video->palette(alldiamspal);
     video->swap();
     video->clear(0);
-    alldiamspic->draw(*vidblitbuf, 0, 0, 0, 0, 640, 480);
+    alldiamspic->draw(*vidblitbuf, 0, 0, 0, 0, 400, 240);
     video->palette(alldiamspal);
     video->swap();
     video->clear(0);
-    alldiamspic->draw(*vidblitbuf, 0, 0, 0, 0, 640, 480);
+    alldiamspic->draw(*vidblitbuf, 0, 0, 0, 0, 400, 240);
     video->palette(alldiamspal);
     video->swap();
     return (HEARTBEAT_FN) MC_alldiams;
@@ -1859,7 +1848,7 @@ HEARTBEAT_FN MC_fadehalfin(void)
   if (fadein < 32)
   {
     fadein++;
-    video->palette(gamepal, fadein*4, 240);
+    video->palette(gamepal, fadein*4, 120);
 //    video->palette(gamepal, fadein*4);
     video->scansync();
     //    video->swap();
@@ -2053,7 +2042,7 @@ HEARTBEAT_FN MC_endtitle(void)
   if (eventcnt > 540)
     {
       //      video->clear(0);
-      demopic->draw(*player1.loadedmap->blitbuf,0,0,0,0,640,480);
+      demopic->draw(*player1.loadedmap->blitbuf,0,0,0,0,400,240);
     }
 
   if (eventcnt == 538)       video->palette(gamepal);
@@ -2228,7 +2217,7 @@ HEARTBEAT_FN MC_endtitle2(void)
   if (eventcnt > 540)
     {
       //      video->clear(0);
-      demopic->draw(*player1.loadedmap->blitbuf,0,0,0,0,640,480);
+      demopic->draw(*player1.loadedmap->blitbuf,0,0,0,0,400,240);
     }
 
   if (eventcnt == 538)       video->palette(gamepal);
@@ -2309,7 +2298,7 @@ HEARTBEAT_FN MC_startsampler(void)
       video->swap();
       video->scansync();
       video->clear(0);
-      demopic->draw(*vidblitbuf, 0, 0, 0, 0, 640, 480);
+      demopic->draw(*vidblitbuf, 0, 0, 0, 0, 400, 240);
       video->palette(gamepal);
     }
 
@@ -2368,7 +2357,7 @@ HEARTBEAT_FN MC_soundsampler(void)
     video->swap();
     video->scansync();
     video->clear(0);
-    demopic->draw(*vidblitbuf, 0, 0, 0, 0, 640, 480);
+    demopic->draw(*vidblitbuf, 0, 0, 0, 0, 400, 240);
   }
       
       delete demopic;
@@ -2426,7 +2415,7 @@ HEARTBEAT_FN MC_prependofdemo2(void)
       video->swap();
       video->scansync();
       video->clear(0);
-      demopic->draw(*vidblitbuf, 0, 0, 0, 0, 640, 480);
+      demopic->draw(*vidblitbuf, 0, 0, 0, 0, 400, 240);
     }
   
   delete demopic;
@@ -2827,9 +2816,9 @@ void levelspecific(void)
 	    
 		testpat = player1.loadedmap->map[(starty*player1.loadedmap->mapsizex/32/32)+(startx/32)];
 
-	    for(starty = 1376; starty<(1376+640); starty+=128)
+	    for(starty = 1376; starty<(1376+400); starty+=128)
 		{
-		  for(startx = 1472; startx<(1472+640); startx+=128)
+		  for(startx = 1472; startx<(1472+400); startx+=128)
 		  {
 			  if(player1.loadedmap->map[(starty*player1.loadedmap->mapsizex/32/32)+(startx/32)] != testpat) goto nietzelfde;
 		  
@@ -3003,10 +2992,10 @@ void checkhol(void)
 
     if ((leveldelay & 31) == 0) nosound = 0;
 
-//    if ((leveldelay & 1) == 0) plof_init(MC_RANDOM(640)+player1.worldx, MC_RANDOM(480)+player1.worldy, 0, 0, 0, 0, nosound);
+//    if ((leveldelay & 1) == 0) plof_init(MC_RANDOM(400)+player1.worldx, MC_RANDOM(240)+player1.worldy, 0, 0, 0, 0, nosound);
     if (leveldelay < 250)
 	{
-		plof_init(MC_RANDOM(640)+player1.worldx, MC_RANDOM(480)+player1.worldy, 0, 0, 0, 0, nosound);
+		plof_init(MC_RANDOM(400)+player1.worldx, MC_RANDOM(240)+player1.worldy, 0, 0, 0, 0, nosound);
         player1.quakex = MC_RANDOM(16);
         player1.quakey = MC_RANDOM(16);
 	}
@@ -3098,7 +3087,7 @@ unsigned char cycle2tab[] =
  192,255,255,
  208,255,255,
  224,255,255,
- 240,255,255,
+ 120,255,255,
  255,255,255,
  248,255,255,
  232,255,255,
@@ -3131,7 +3120,7 @@ unsigned char cycle2tab[] =
  192,255,255,
  208,255,255,
  224,255,255,
- 240,255,255,
+ 120,255,255,
  255,255,255,
  248,255,255,
  232,255,255,
@@ -3184,12 +3173,12 @@ unsigned char cycle2btab[] =
  216,255,255,
  224,255,255,
  232,255,255,
- 240,255,255,
+ 120,255,255,
  248,255,255,
  255,255,255,
  255,255,255,
  248,255,255,
- 240,255,255,
+ 120,255,255,
  232,255,255,
  224,255,255,
  216,255,255,
@@ -3250,12 +3239,12 @@ unsigned char cycle2btab[] =
  216,255,255,
  224,255,255,
  232,255,255,
- 240,255,255,
+ 120,255,255,
  248,255,255,
  255,255,255,
  255,255,255,
  248,255,255,
- 240,255,255,
+ 120,255,255,
  232,255,255,
  224,255,255,
  216,255,255,
@@ -3306,7 +3295,7 @@ unsigned char cycle2ctab[] =
    0,  0,192,
    0,  0,208,
    0,  0,224,
-   0,  0,240,
+   0,  0,120,
    0,  0,255,
    0, 16,255,
    0, 32,255,
@@ -3322,7 +3311,7 @@ unsigned char cycle2ctab[] =
    0,192,255,
    0,208,255,
    0,224,255,
-   0,240,255,
+   0,120,255,
    0,255,255,
   16,255,255,
   32,255,255,
@@ -3338,7 +3327,7 @@ unsigned char cycle2ctab[] =
  192,255,255,
  208,255,255,
  224,255,255,
- 240,255,255,
+ 120,255,255,
  255,255,255,
  248,255,255,
  232,255,255,
@@ -3357,7 +3346,7 @@ unsigned char cycle2ctab[] =
   24,255,255,
    8,255,255,
    0,255,255,
-   0,240,255,
+   0,120,255,
    0,224,255,
    0,208,255,
    0,192,255,
@@ -3373,7 +3362,7 @@ unsigned char cycle2ctab[] =
    0, 32,255,
    0, 16,255,
    0,  0,255,
-   0,  0,240,
+   0,  0,120,
    0,  0,224,
    0,  0,208,
    0,  0,192,
@@ -3404,7 +3393,7 @@ unsigned char cycle2ctab[] =
    0,  0,192,
    0,  0,208,
    0,  0,224,
-   0,  0,240,
+   0,  0,120,
    0,  0,255,
    0, 16,255,
    0, 32,255,
@@ -3420,7 +3409,7 @@ unsigned char cycle2ctab[] =
    0,192,255,
    0,208,255,
    0,224,255,
-   0,240,255,
+   0,120,255,
    0,255,255,
   16,255,255,
   32,255,255,
@@ -3436,7 +3425,7 @@ unsigned char cycle2ctab[] =
  192,255,255,
  208,255,255,
  224,255,255,
- 240,255,255,
+ 120,255,255,
  255,255,255,
  248,255,255,
  232,255,255,
@@ -3455,7 +3444,7 @@ unsigned char cycle2ctab[] =
   24,255,255,
    8,255,255,
    0,255,255,
-   0,240,255,
+   0,120,255,
    0,224,255,
    0,208,255,
    0,192,255,
@@ -3471,7 +3460,7 @@ unsigned char cycle2ctab[] =
    0, 32,255,
    0, 16,255,
    0,  0,255,
-   0,  0,240,
+   0,  0,120,
    0,  0,224,
    0,  0,208,
    0,  0,192,
@@ -3576,9 +3565,9 @@ unsigned char cycle3tab[] =
    0,  0,192,
    0,  0,208,
    0,  0,224,
-   0,  0,240,
+   0,  0,120,
    0,  0,255,
-   0,  0,240,
+   0,  0,120,
    0,  0,224,
    0,  0,208,
    0,  0,192,
@@ -3608,9 +3597,9 @@ unsigned char cycle3tab[] =
    0,  0,192,
    0,  0,208,
    0,  0,224,
-   0,  0,240,
+   0,  0,120,
    0,  0,255,
-   0,  0,240,
+   0,  0,120,
    0,  0,224,
    0,  0,208,
    0,  0,192,
@@ -3953,7 +3942,7 @@ unsigned char cycle4tab[] =
    0,  0,192,
    0,  0,208,
    0,  0,224,
-   0,  0,240,
+   0,  0,120,
    0,  0,255,
    0, 16,255,
    0, 32,255,
@@ -3969,10 +3958,10 @@ unsigned char cycle4tab[] =
    0,192,255,
    0,208,255,
    0,224,255,
-   0,240,255,
+   0,120,255,
    0,255,255,
    0,255,255,
-   0,240,255,
+   0,120,255,
    0,224,255,
    0,208,255,
    0,192,255,
@@ -3988,7 +3977,7 @@ unsigned char cycle4tab[] =
    0, 32,255,
    0, 16,255,
    0,  0,255,
-   0,  0,240,
+   0,  0,120,
    0,  0,224,
    0,  0,208,
    0,  0,192,
@@ -4144,7 +4133,7 @@ void colorcycles(void)
     glows[6]  = cycle4tab[((glowcnt3/8)*3)+1];
     glows[9]  = cycle4tab[((glowcnt4/8)*3)+1];
 
-    video->palette_index(glows, 240, 4);
+    video->palette_index(glows, 120, 4);
   }
 
 
@@ -4157,7 +4146,7 @@ void colorcycles(void)
 
     memcpy(glows, glowriginal+(glowcnt1*3), 48);
 
-    video->palette_index(glows, 240, 16);
+    video->palette_index(glows, 120, 16);
   }
 }
 
@@ -4392,8 +4381,8 @@ void paraballetjes(void)
       y += ((sinus512[(sb2y)       & 1023] * 256) >> 10);
       y += ((sinus512[(sb3y)       & 1023] * 256) >> 10);
 
-      x+=320;
-      y+=240;
+      x+=200;
+      y+=120;
 
       frame = anim_forceframe (orglev4bal, col);
       frame->draw(*para, x, y );
@@ -4628,9 +4617,9 @@ void framework_EventHandle(int event, int param)
       case FW_MOUSEMOVE:
 //        mousex = param & 0xffff;
 //        mousey = (param>>16) & 0xffff;
-//        if (mousex != 320 || mousey != 240)
+//        if (mousex != 200 || mousey != 120)
 //        {
-//          framework_util_SetMouse(320,240);
+//          framework_util_SetMouse(200,120);
 //        }
         break;
   }
@@ -5179,7 +5168,7 @@ void load_patterns(char *patternpic)
       priotab[(317*2)+1]++;
       priotab[(318*2)+1]++;
       priotab[(319*2)+1]++;
-      priotab[(320*2)+1]++;
+      priotab[(200*2)+1]++;
       priotab[(321*2)+1]++;
       priotab[(322*2)+1]++;
       priotab[(323*2)+1]++;
@@ -5412,8 +5401,8 @@ void glob_init(void)
 
 // prepare exhaustcols for level3
 
-  memcpy(glowriginal   , ingamepal+(240*3), 48);
-  memcpy(glowriginal+96, ingamepal+(240*3), 48);
+  memcpy(glowriginal   , ingamepal+(120*3), 48);
+  memcpy(glowriginal+96, ingamepal+(120*3), 48);
 
   for (i=0; i<16; i++)
   {
@@ -5999,11 +5988,11 @@ void mouse_handling(void)
   POINT mypoint;
 #if 0
   MS_getPos(&mousex,&mousey);
-  MS_moveTo((prefs->reso == PREFS_LORES) ? 160 : 320  , (prefs->reso == PREFS_LORES) ? 120 : 240 );
+  MS_moveTo((prefs->reso == PREFS_LORES) ? 160 : 200  , (prefs->reso == PREFS_LORES) ? 120 : 120 );
 #endif
 
 //  GetCursorPos(&mypoint);
-//  SetCursorPos(320,240);
+//  SetCursorPos(200,120);
   mousex = g_MouseXCurrent;
   mousey = g_MouseYCurrent;
 
@@ -6011,8 +6000,8 @@ void mouse_handling(void)
     {
         if(g_MouseFlg)
         {
-      hoi->x += (mousex-((prefs->reso == PREFS_LORES) ? 160 : 320 ))/4;
-      hoi->y += (mousey-((prefs->reso == PREFS_LORES) ? 120 : 240 ))/4;
+      hoi->x += (mousex-((prefs->reso == PREFS_LORES) ? 160 : 200 ))/4;
+      hoi->y += (mousey-((prefs->reso == PREFS_LORES) ? 120 : 120 ))/4;
         }      
       if ((INT16) hoi->x < 0)
   {
@@ -6041,8 +6030,8 @@ void mouse_handling(void)
     }
   else
     {
-      globmousex += (mousex-((prefs->reso == PREFS_LORES) ? 160 : 320 ));
-      globmousey += (mousey-((prefs->reso == PREFS_LORES) ? 120 : 240 ));
+      globmousex += (mousex-((prefs->reso == PREFS_LORES) ? 160 : 200 ));
+      globmousey += (mousey-((prefs->reso == PREFS_LORES) ? 120 : 120 ));
 
     }
 }
@@ -6262,7 +6251,7 @@ HEARTBEAT_FN MC_preptitlesequence(void)
   recplay = 0;
   ingameflg = 0;
   musicrestartflg = 0;  // music DOESN'T rerstart automatically...
-
+  printf("prep title\n");
 //  video->clear(0);
   memset(gamepal, 0, 768);
   video->palette(gamepal);
@@ -6318,9 +6307,9 @@ HEARTBEAT_FN MC_preptitlesequence(void)
   {
 	  prevplace = 0;
 //	  starttime = PHAL::GetClock();
-      starttime = clock();
+      starttime = SDL_GetTicks();
 	  FirstTimeShowCredzFlg=1;
-	  ShowPicture("screen1.tga");
+	  ShowPicture("world1.tga");
 
 	  return (HEARTBEAT_FN) MC_showScreen2;    // show the makers of this game NEW!!  
   }
@@ -6333,9 +6322,12 @@ HEARTBEAT_FN MC_preptitlesequence(void)
 
 HEARTBEAT_FN MC_showScreen2(void)
 {
+  // printf("show screen 2\n");
 	int curtime;
-    curtime = clock();
-	if((curtime-starttime)<5500)
+  curtime = SDL_GetTicks();
+  // printf("current time: %d\n",curtime-starttime);
+
+	if((curtime-starttime)<5)
 	{
 	  return (HEARTBEAT_FN) MC_showScreen2;    // show the makers of this game NEW!!  
 	}
@@ -6345,7 +6337,7 @@ HEARTBEAT_FN MC_showScreen2(void)
 		prevplace=1;
 	}
 
-	if((curtime-starttime)<7000)
+	if((curtime-starttime)<7)
 	{
 	  return (HEARTBEAT_FN) MC_showScreen2;    // show the makers of this game NEW!!  
 	}
@@ -6353,10 +6345,10 @@ HEARTBEAT_FN MC_showScreen2(void)
 	if(FirstTimeShowCredzFlg==1)
 	{
 		FirstTimeShowCredzFlg = 2;
-	    ShowPicture("screen2.tga");
+	    ShowPicture("world2.tga");
 	}
 
-	if((curtime-starttime)<17000)
+	if((curtime-starttime)<8)
 	{
 	  return (HEARTBEAT_FN) MC_showScreen2;    // show the makers of this game NEW!!  
 	}
@@ -6447,7 +6439,7 @@ HEARTBEAT_FN MC_showentername(void)
   UINT16 i;
 
   log_out("point1");
-  highpic->draw_nokey(*refreshpic, 0, 0, 0, 0, 640, 480);
+  highpic->draw_nokey(*refreshpic, 0, 0, 0, 0, 400, 240);
   log_out("point2");
 
   for (i =0; i < 20; i++)
@@ -6455,7 +6447,7 @@ HEARTBEAT_FN MC_showentername(void)
       video->swap();
       video->scansync();
       video->clear(0);
-      refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 640, 480);
+      refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, 240);
     }
   log_out("point3");
 
@@ -6504,14 +6496,14 @@ HEARTBEAT_FN MC_entername(void)
 {
   video->swap();
   video->scansync();
-  refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 640, 480);
+  refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, 240);
 
   handleinputloop();
 
   scrolltextline();
 
   menuitem = 2;
-  highpic->draw_nokey(*vidblitbuf, 0, menupoint[menuitem].linenr*32-16, 0, menupoint[menuitem].linenr*32-16, 640, menupoint[menuitem].linenr*32+32+16);
+  highpic->draw_nokey(*vidblitbuf, 0, menupoint[menuitem].linenr*32-16, 0, menupoint[menuitem].linenr*32-16, 400, menupoint[menuitem].linenr*32+32+16);
   menupuntblit();
 
   if (invulexit)
@@ -6730,7 +6722,7 @@ void scrolltextline(void)
 
   destx = (0) - (letchainpos & 31);
 
-  rot = destx-320;
+  rot = destx-200;
 
   for (i=0; i<22; i++)
     {
@@ -6774,15 +6766,15 @@ void killsequence()
 HEARTBEAT_FN MC_showtitlesequence1(void)
 {
   UINT16 i;
-
-  titlepic->draw_nokey(*refreshpic, 0, 0, 0, 0, 640, 480);
+  printf("show title seq 1\n");
+  titlepic->draw_nokey(*refreshpic, 0, 0, 0, 0, 400, 240);
 
   for (i =0; i < 20; i++)
     {
       video->swap();
       video->scansync();
       video->clear(0);
-      refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 640, 480);
+      refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, 240);
     }
 
   memcpy(gamepal, titlepal, 768);
@@ -6811,7 +6803,7 @@ HEARTBEAT_FN MC_showtitlesequence1(void)
 HEARTBEAT_FN MC_titlesequence1(void)
 {
 
-  refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 640, 480);
+  refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, 240);
   video->swap();
   video->scansync();
 
@@ -6848,7 +6840,7 @@ HEARTBEAT_FN MC_darkentitlesequence(void)
   if (darken > 128)
     {
       darken -= 8;
-      video->palette(gamepal, darken, 240);
+      video->palette(gamepal, darken, 120);
 //      video->palette(gamepal, darken);
       video->scansync();
       return (HEARTBEAT_FN) MC_darkentitlesequence;
@@ -6881,7 +6873,7 @@ HEARTBEAT_FN MC_options(void)
 {
   video->swap();
   video->scansync();
-  refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 640, 480);
+  refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, 240);
 
   handleinput1shot();
 
@@ -6907,7 +6899,7 @@ HEARTBEAT_FN MC_menu(void)
 
   video->swap();
   video->scansync();
-  refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 640, 480);
+  refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, 240);
 
   handleinput1shot();
 
@@ -6918,7 +6910,7 @@ HEARTBEAT_FN MC_menu(void)
 	keytab[VK_ESCAPE] = 0;
     if (menupoint == menu1)
 	{
-      titlepic->draw_nokey(*refreshpic, 0, 0, 0, 0, 640, 480);
+      titlepic->draw_nokey(*refreshpic, 0, 0, 0, 0, 400, 240);
       menuleavefunc = (HEARTBEAT_FN) MC_leavemenu;
 	}
     if (menupoint == menu12 || menupoint == menu13)
@@ -6948,7 +6940,7 @@ HEARTBEAT_FN MC_menu(void)
         if (menuleavefunc) return (HEARTBEAT_FN) menuleavefunc;
       }
 
-  titlepic->draw_nokey(*vidblitbuf, 0, menupoint[menuitem].linenr*32-16, 0, menupoint[menuitem].linenr*32-16, 640, menupoint[menuitem].linenr*32+32+16);
+  titlepic->draw_nokey(*vidblitbuf, 0, menupoint[menuitem].linenr*32-16, 0, menupoint[menuitem].linenr*32-16, 400, menupoint[menuitem].linenr*32+32+16);
   menupuntblit();
 
   return (HEARTBEAT_FN) MC_menu;
@@ -6984,7 +6976,7 @@ HEARTBEAT_FN MC_menu(void)
 	if(g_MouseFlg)
 	{
 		int x,y;
-//		x = 320-g_MouseYDown;
+//		x = 200-g_MouseYDown;
 //		y = g_MouseXDown;
 		x = g_MouseXDown;
 		y = g_MouseYDown;
@@ -7025,12 +7017,12 @@ HEARTBEAT_FN MC_menu(void)
   if (menutimeout==0)
   {
     menutimeout = 1000;
-    titlepic->draw_nokey(*refreshpic, 0, 0, 0, 0, 640, 480);
+    titlepic->draw_nokey(*refreshpic, 0, 0, 0, 0, 400, 240);
     menuleavefunc = (HEARTBEAT_FN) MC_leavemenu;
     if (menuleavefunc) return (HEARTBEAT_FN) menuleavefunc;
   }
  
-  titlepic->draw_nokey(*vidblitbuf, 0, menupoint[menuitem].linenr*32-16, 0, menupoint[menuitem].linenr*32-16, 640, menupoint[menuitem].linenr*32+32+16);
+  titlepic->draw_nokey(*vidblitbuf, 0, menupoint[menuitem].linenr*32-16, 0, menupoint[menuitem].linenr*32-16, 400, menupoint[menuitem].linenr*32+32+16);
   menupuntblit();
 
   return (HEARTBEAT_FN) MC_menu;
@@ -7306,7 +7298,7 @@ void menuf132(void)
 
 void menuf14(void)
 {
-//  titlepic->draw(*refreshpic, 0, 0, 0, 0, 640, 480);
+//  titlepic->draw(*refreshpic, 0, 0, 0, 0, 400, 240);
 //  menuleavefunc = (HEARTBEAT_FN) MC_leavemenu;
 
   fadereturn = (HEARTBEAT_FN) MC_startdemo;
@@ -7418,7 +7410,7 @@ HEARTBEAT_FN MC_buildmenu(void)
 
   if (menupoint != enter_menu)  // niet echt geweledig mooi... magoed, deadlines enzo..
     {
-      titlepic->draw_nokey(*refreshpic, 0, 160, 0, 160, 640, 480);
+      titlepic->draw_nokey(*refreshpic, 0, 160, 0, 160, 400, 240);
     }
 
   itemcnt = 0;
@@ -7466,12 +7458,12 @@ HEARTBEAT_FN MC_leavemenu(void)
 {
   video->swap();
   video->scansync();
-  refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 640, 480);
+  refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, 240);
 
   if (darken < 256)
     {
       darken += 8;
-      video->palette(gamepal, darken, 240);
+      video->palette(gamepal, darken, 120);
 //      video->palette(gamepal, darken);
       return (HEARTBEAT_FN) MC_leavemenu;
     }
@@ -7486,14 +7478,14 @@ HEARTBEAT_FN MC_showcredz1(void)
 {
   UINT16 i;
 
-  highpic->draw_nokey(*refreshpic, 0, 0, 0, 0, 640, 480);
+  highpic->draw_nokey(*refreshpic, 0, 0, 0, 0, 400, 240);
 
   for (i =0; i < 20; i++)
     {
       video->swap();
       video->scansync();
       video->clear(0);
-      refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 640, 480);
+      refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, 240);
     }
 
   memcpy(gamepal, highpal, 768);
@@ -7516,7 +7508,7 @@ HEARTBEAT_FN MC_credz1(void)
 {
   video->swap();
   video->scansync();
-  refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 640, 480);
+  refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, 240);
 
   handleinput1shot();
 
@@ -7565,14 +7557,14 @@ HEARTBEAT_FN MC_showtitlesequence2(void)
 {
   UINT16 i;
 
-  titlepic->draw_nokey(*refreshpic, 0, 0, 0, 0, 640, 480);
+  titlepic->draw_nokey(*refreshpic, 0, 0, 0, 0, 400, 240);
 
   for (i =0; i < 20; i++)
     {
       video->swap();
       video->scansync();
       video->clear(0);
-      refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 640, 480);
+      refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, 240);
     }
 
   memcpy(gamepal, titlepal, 768);
@@ -7597,7 +7589,7 @@ HEARTBEAT_FN MC_showtitlesequence2(void)
 
 HEARTBEAT_FN MC_titlesequence2(void)
 {
-  refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 640, 480);
+  refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, 240);
   video->swap();
   video->scansync();
 
@@ -7634,14 +7626,14 @@ HEARTBEAT_FN MC_showhighscore(void)
 {
   UINT16 i;
 
-  highpic->draw_nokey(*refreshpic, 0, 0, 0, 0, 640, 480);
+  highpic->draw_nokey(*refreshpic, 0, 0, 0, 0, 400, 240);
 
   for (i =0; i < 20; i++)
     {
       video->swap();
       video->scansync();
       video->clear(0);
-      refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 640, 480);
+      refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, 240);
     }
 
   memcpy(gamepal, highpal, 768);
@@ -7663,7 +7655,7 @@ HEARTBEAT_FN MC_highscore(void)
 {
   video->swap();
   video->scansync();
-  refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 640, 480);
+  refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, 240);
 
   handleinput1shot();
 
@@ -7709,14 +7701,14 @@ HEARTBEAT_FN MC_showtitlesequence3(void)
 {
   UINT16 i;
 
-  titlepic->draw_nokey(*refreshpic, 0, 0, 0, 0, 640, 480);
+  titlepic->draw_nokey(*refreshpic, 0, 0, 0, 0, 400, 240);
 
   for (i =0; i < 20; i++)
     {
       video->swap();
       video->scansync();
       video->clear(0);
-      refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 640, 480);
+      refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, 240);
     }
 
   memcpy(gamepal, titlepal, 768);
@@ -7741,7 +7733,7 @@ HEARTBEAT_FN MC_showtitlesequence3(void)
 
 HEARTBEAT_FN MC_titlesequence3(void)
 {
-  refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 640, 480);
+  refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, 240);
   video->swap();
   video->scansync();
 
@@ -7778,14 +7770,14 @@ HEARTBEAT_FN MC_showcredz2(void)
 {
   UINT16 i;
 
-  highpic->draw_nokey(*refreshpic, 0, 0, 0, 0, 640, 480);
+  highpic->draw_nokey(*refreshpic, 0, 0, 0, 0, 400, 240);
 
   for (i =0; i < 20; i++)
     {
       video->swap();
       video->scansync();
       video->clear(0);
-      refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 640, 480);
+      refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, 240);
     }
 
   memcpy(gamepal, highpal, 768);
@@ -7806,7 +7798,7 @@ HEARTBEAT_FN MC_credz2(void)
 {
   video->swap();
   video->scansync();
-  refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 640, 480);
+  refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, 240);
 
   handleinput1shot();
 
@@ -7859,13 +7851,13 @@ HEARTBEAT_FN MC_luxaflex(void)
 
   video->swap();
   video->scansync();
-  refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 640, 480);
+  refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, 240);
 
   for (i=0; i<14; i++)
     {
       if (luxatab[i] > 0  && luxatab[i] < 33)
   {
-    highpic->draw_nokey(*refreshpic, 0, (i*32)+32-luxatab[i], 0, (i*32), 640, (i*32)+luxatab[i]);
+    highpic->draw_nokey(*refreshpic, 0, (i*32)+32-luxatab[i], 0, (i*32), 400, (i*32)+luxatab[i]);
   }
     }
 
@@ -7888,14 +7880,14 @@ HEARTBEAT_FN MC_showcredz3(void)
 {
 
 #if 0
-  highpic->draw_nokey(*refreshpic, 0, 0, 0, 0, 640, 480);
+  highpic->draw_nokey(*refreshpic, 0, 0, 0, 0, 400, 240);
 
   for (i =0; i < 20; i++)
     {
       video->swap();
       video->scansync();
       video->clear(0);
-      refreshpic->draw(*vidblitbuf, 0, 0, 0, 0, 640, 480);
+      refreshpic->draw(*vidblitbuf, 0, 0, 0, 0, 400, 240);
     }
 
   memcpy(gamepal, highpal, 768);
@@ -7920,7 +7912,7 @@ HEARTBEAT_FN MC_credz3(void)
 {
   video->swap();
   video->scansync();
-  refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 640, 480);
+  refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, 240);
 
   letterswirlscan();
   letterswirlin();
@@ -7969,14 +7961,14 @@ HEARTBEAT_FN MC_showcredz4(void)
 {
 
 #if 0
-  highpic->draw_nokey(*refreshpic, 0, 0, 0, 0, 640, 480);
+  highpic->draw_nokey(*refreshpic, 0, 0, 0, 0, 400, 240);
 
   for (i =0; i < 20; i++)
     {
       video->swap();
       video->scansync();
       video->clear(0);
-      refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 640, 480);
+      refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, 240);
     }
 
   memcpy(gamepal, highpal, 768);
@@ -8001,7 +7993,7 @@ HEARTBEAT_FN MC_credz4(void)
 {
   video->swap();
   video->scansync();
-  refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 640, 480);
+  refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, 240);
 
   letterswirlscan();
   letterswirlin();
@@ -8127,7 +8119,7 @@ skipspace:
       {
         swirlinpoint++;
         swirlx += 32;
-        if (swirlx == 640)
+        if (swirlx == 400)
     {
       swirlx = 0;
       swirly += 36;  //32
@@ -8140,7 +8132,7 @@ skipspace:
     swirlextrax = 16;
     swirlinpoint++;
     swirlx += 32;
-    if (swirlx == 640)
+    if (swirlx == 400)
       {
         swirlx = 0;
         swirly += 36;  //32
@@ -8152,7 +8144,7 @@ skipspace:
     swirlextrax = 0;
     swirlinpoint++;
     swirlx += 32;
-    if (swirlx == 640)
+    if (swirlx == 400)
       {
         swirlx = 0;
         swirly += 36;    //32
@@ -8175,7 +8167,7 @@ skipspace:
 
         swirlinpoint++;
         swirlx += 32;
-        if (swirlx == 640)
+        if (swirlx == 400)
     {
       swirlx = 0;
       swirly += 32;
@@ -8196,15 +8188,15 @@ UINT16 puzzleoffset[26] = {
   0,89,
   129,89,
   129,0,
-  320,0,
-  320,89,
+  200,0,
+  200,89,
   449,89,
   449,0,
-  0,240,
+  0,120,
   0,329,
   129,329,
-  129,240,
-  320,240
+  129,120,
+  200,120
 };
 
 Cblitbuf *puzzlepieces[26];
@@ -8248,17 +8240,17 @@ UINT16 cyferoffset[26] = {
   160,120,
   160,  0,
 
-  320,  0,
-  320,120,
-  480,120,
-  480,  0,
+  200,  0,
+  200,120,
+  240,120,
+  240,  0,
 
-    0,240,
+    0,120,
     0,360,
   160,360,
-  160,240,
+  160,120,
 
-  320,240,
+  200,120,
 };
 
 
@@ -8269,7 +8261,7 @@ HEARTBEAT_FN MC_preppuzzleselect(void)
 
 	LOG("H\n");
   video->DrawLoading();
-  puzzlepic = new Cblitbuf(640,480,0,0);
+  puzzlepic = new Cblitbuf(400,240,0,0);
 	LOG("I\n");
   for (i=0; i<26; i++)
   { 
@@ -8368,7 +8360,7 @@ HEARTBEAT_FN MC_puzzleselect(void)
     puzzleactiveflg = 1;
   video->swap();
   video->scansync();
-  puzzlepic->draw(*vidblitbuf, 0, 0, 0, 0, 640, 480);
+  puzzlepic->draw(*vidblitbuf, 0, 0, 0, 0, 400, 240);
 
   handleinput1shot();
 
@@ -8399,7 +8391,7 @@ HEARTBEAT_FN MC_puzzleselect(void)
 	if(g_MouseFlg)
 	{
 		int x,y;
-//		x = 320-g_MouseYDown;
+//		x = 200-g_MouseYDown;
 //		y = g_MouseXDown;
         x = g_MouseXDown;
         y = g_MouseYDown;
@@ -8534,7 +8526,7 @@ HEARTBEAT_FN MC_puzzleshow(void)
 {
   video->swap();
   video->scansync();
-  puzzlepic->draw(*vidblitbuf, 0, 0, 0, 0, 640, 480);
+  puzzlepic->draw(*vidblitbuf, 0, 0, 0, 0, 400, 240);
 
   handleinput1shot();
 
@@ -8570,13 +8562,13 @@ HEARTBEAT_FN MC_endpuzzle(void)
 {
   video->swap();
   video->scansync();
-  puzzlepic->draw(*vidblitbuf, 0, 0, 0, 0, 640, 480);
+  puzzlepic->draw(*vidblitbuf, 0, 0, 0, 0, 400, 240);
   video->swap();
   video->scansync();
-  puzzlepic->draw(*vidblitbuf, 0, 0, 0, 0, 640, 480);
+  puzzlepic->draw(*vidblitbuf, 0, 0, 0, 0, 400, 240);
   video->swap();
   video->scansync();
-  puzzlepic->draw(*vidblitbuf, 0, 0, 0, 0, 640, 480);
+  puzzlepic->draw(*vidblitbuf, 0, 0, 0, 0, 400, 240);
 
   killpuzzle();
   return (HEARTBEAT_FN) MC_loadlevel;
@@ -8586,13 +8578,13 @@ HEARTBEAT_FN MC_abortpuzzle(void)
 {
   video->swap();
   video->scansync();
-  puzzlepic->draw(*vidblitbuf, 0, 0, 0, 0, 640, 480);
+  puzzlepic->draw(*vidblitbuf, 0, 0, 0, 0, 400, 240);
   video->swap();
   video->scansync();
-  puzzlepic->draw(*vidblitbuf, 0, 0, 0, 0, 640, 480);
+  puzzlepic->draw(*vidblitbuf, 0, 0, 0, 0, 400, 240);
   video->swap();
   video->scansync();
-  puzzlepic->draw(*vidblitbuf, 0, 0, 0, 0, 640, 480);
+  puzzlepic->draw(*vidblitbuf, 0, 0, 0, 0, 400, 240);
 
   killpuzzle();
   return (HEARTBEAT_FN) MC_preptitlesequence;

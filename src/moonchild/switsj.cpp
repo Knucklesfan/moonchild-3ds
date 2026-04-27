@@ -202,7 +202,7 @@ int wall_live (OBJECT *object, UINT32 param)
         UINT16 spd;
         spd = (120-wallblood->camdelay)/2 + 1;
         if (spd > 32) spd = 32;
-        camera_override(&player1, player1.focusx+320, player1.focusy+240, spd);
+        camera_override(&player1, player1.focusx+200, player1.focusy+120, spd);
         wallblood->camdelay--;
       }
     }
