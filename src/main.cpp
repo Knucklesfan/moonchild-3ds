@@ -129,47 +129,40 @@ void shutdownSDL() {
   SDL_Quit();
 }
 void renderFb(u8* pixelBuffer, gfx3dSide_t screen, gfxScreen_t position, int width, int height) {
-    const int inStride  = screenWidth * 4;    // bytes per input row (RGBA)
-    const int outStride = realHeight * 3;     // bytes per output column (RGB, stored column-major in original)
-    u8* btm = gfxGetFramebuffer(GFX_BOTTOM, screen, NULL, NULL);
-    u8* top = gfxGetFramebuffer(GFX_TOP, screen, NULL, NULL);
+  u8* btm = gfxGetFramebuffer(GFX_BOTTOM, screen, NULL, NULL);
+  u8* top = gfxGetFramebuffer(GFX_TOP, screen, NULL, NULL);
 
-    // bottom target is centered 320 wide in the original code
-    const int bottomWidth = 320;
-    const int bottomXoff = (screenWidth - bottomWidth) / 2;
-
-    // Process each column once, building top and bottom columns by scanning input rows top->bottom (but original flips vertically)
-    for (int x = 0; x < screenWidth; ++x) {
-        // Pointers to destination column starts (each column stores realHeight pixels * 3 bytes)
-        u8* topCol = top  + x * outStride;
-        u8* btmCol = NULL;
-        if (x >= bottomXoff && x < bottomXoff + bottomWidth) {
-            btmCol = btm + (x - bottomXoff) * outStride;
+  // const int inStride  = screenWidth * 4;
+  // const int outStride = realHeight * 3;
+  // for (int x = 0; x < width; ++x) {
+  //     unsigned char *out = fb + (x+(position==GFX_BOTTOM?(screenWidth-width)/2:0)) * outStride;
+  //     const unsigned char *inRow = pixelBuffer + ((position==GFX_BOTTOM?(screenHeight):realHeight) - 1) * inStride + (x+(position==GFX_BOTTOM?(realHeight):0)) * 4;
+  //     for (int y = 0; y < realHeight; ++y) {
+  //         out[0] = inRow[0];
+  //         out[1] = inRow[1];
+  //         out[2] = inRow[2];
+  //         out += 3;
+  //         inRow -= inStride; // move up one input row since we're at the bottom
+  //     }
+  // }  // memcpy(fb, pixelBuffer, screenWidth * bytesPerPixel * screenHeight);
+  for(int x= 0; x < screenWidth; x++) {
+    int othery = 0;
+    for(int y = screenHeight; y > 0; y--) {
+      if(y > realHeight) {
+        if(x > (screenWidth-320)/2 && x-(screenWidth-320)/2 < 320) {
+          btm[(x-(screenWidth-320)/2)*(realHeight*3)+(othery)*3] = pixelBuffer[(y*(screenWidth*4))+(x)*4]; 
+          btm[(x-(screenWidth-320)/2)*(realHeight*3)+(othery)*3+1] = pixelBuffer[y*(screenWidth*4)+(x)*4+1]; 
+          btm[(x-(screenWidth-320)/2)*(realHeight*3)+(othery)*3+2] = pixelBuffer[y*(screenWidth*4)+(x)*4+2];
         }
-
-        // Walk input rows from bottom->top to preserve original vertical flip
-        // othery counts from 0 upward and indexes into dest column
-        int othery = 0;
-        for (int yi = screenHeight - 1; yi >= 0; --yi, ++othery) {
-            u8* src = pixelBuffer + yi * inStride + x * 4; // RGBA
-            // Copy RGB (3 bytes) to the appropriate destination(s)
-            if (yi >= realHeight) {
-                // This input row maps only to bottom framebuffer (if within center 320)
-                if (btmCol) {
-                    u8* dest = btmCol + othery * 3;
-                    dest[0] = src[0];
-                    dest[1] = src[1];
-                    dest[2] = src[2];
-                }
-            } else {
-                // This input row maps to top framebuffer (wrap/restrict to realHeight)
-                u8* dest = topCol + (othery % realHeight) * 3;
-                dest[0] = src[0];
-                dest[1] = src[1];
-                dest[2] = src[2];
-            }
-        }
+      }
+      else {
+        top[x*(realHeight*3)+(othery%realHeight)*3] = pixelBuffer[(y*(screenWidth*4))+x*4]; 
+        top[x*(realHeight*3)+(othery%realHeight)*3+1] = pixelBuffer[y*(screenWidth*4)+x*4+1]; 
+        top[x*(realHeight*3)+(othery%realHeight)*3+2] = pixelBuffer[y*(screenWidth*4)+x*4+2];
+      }
+      othery++;
     }
+  }
 }
 void presentFrame() {
   // renderFb(rightBuffer,GFX_RIGHT,GFX_TOP, screenWidth, screenHeight);
