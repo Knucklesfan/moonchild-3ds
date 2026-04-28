@@ -94,7 +94,7 @@ void score_display(VIEWPORT *player)
 
 //  if (world !=3)
     {
-      frame->draw(*player->loadedmap->blitbuf,70 + (0*40) + ((sinus512[xcnt]*10)>>10) - scoreshift, 414 + ((sinus512[ycnt]*10)>>10) );
+      frame->draw(*player->loadedmap->blitbuf,80 + (0*40) + ((sinus512[xcnt]*10)>>10) - scoreshift, 256 + ((sinus512[ycnt]*10)>>10) );
     }
 
 
@@ -105,9 +105,9 @@ void score_display(VIEWPORT *player)
 
   frame = anim_setsequence(orgheart, 0, SEQ_FORCE);
   frame = anim_forceframe (orgheart, 16 - (player->energy >> 1));
-  frame->draw(*player->loadedmap->blitbuf,70 + (1*40) + ((sinus512[xcnt]*10)>>10) - scoreshift, 414 + ((sinus512[ycnt]*10)>>10) );
+  frame->draw(*player->loadedmap->blitbuf,70 + (1*40) + ((sinus512[xcnt]*10)>>10) - scoreshift, 256 + ((sinus512[ycnt]*10)>>10) );
 
-  scoreposhold[holdcnt   ] = 70 + (1*40) + ((sinus512[xcnt]*10)>>10) - scoreshift + 8;
+  scoreposhold[holdcnt   ] = 70 + (1*40) + ((sinus512[xcnt]*10)>>10) - scoreshift + 32;
   scoreposhold[holdcnt+1 ] = 414 + ((sinus512[ycnt]*10)>>10) + 8;
   holdcnt+=2;
 
@@ -155,7 +155,7 @@ void score_display(VIEWPORT *player)
 	frame = anim_forceframe (orgdiamond, 1);
       }
 
-    scoreposhold[holdcnt   ] = 70 + (i*40) + ((sinus512[xcnt]*10)>>10);
+    scoreposhold[holdcnt   ] = ((i-2)*40) + ((sinus512[xcnt]*10)>>10)+4;
     scoreposhold[holdcnt+1 ] = 414 + ((sinus512[ycnt]*10)>>10) + scoreshift;
     holdcnt+=2;
 
@@ -163,7 +163,7 @@ void score_display(VIEWPORT *player)
       {
 	if (world !=3)
 	  {
-	    frame->draw(*player->loadedmap->blitbuf,70 + (i*40) + ((sinus512[xcnt]*10)>>10), 414 + ((sinus512[ycnt]*10)>>10) + scoreshift );
+	    frame->draw(*player->loadedmap->blitbuf,((i-2)*40) + ((sinus512[xcnt]*10)>>10)+4, 414 + ((sinus512[ycnt]*10)>>10) + scoreshift );
 	  }
       }
     else
@@ -177,7 +177,7 @@ void score_display(VIEWPORT *player)
 	    frame = anim_forceframe (orgdiamond, 1);
 	    if (world !=3)
 	      {
-		frame->draw(*player->loadedmap->blitbuf,70 + (i*40) + ((sinus512[xcnt]*10)>>10), 414 + ((sinus512[ycnt]*10)>>10) + scoreshift );
+		frame->draw(*player->loadedmap->blitbuf,((i-2)*40) + ((sinus512[xcnt]*10)>>10)+4, 414 + ((sinus512[ycnt]*10)>>10) + scoreshift );
 	      }
 	  }
 	else if ((i-3) == (((diamondknip-4)&31)/4))
@@ -185,7 +185,7 @@ void score_display(VIEWPORT *player)
 	    frame = anim_forceframe (orgdiamond, 1);
 	    if (world !=3)
 	      {
-		frame->draw(*player->loadedmap->blitbuf,70 + (i*40) + ((sinus512[xcnt]*10)>>10), 414 + ((sinus512[ycnt]*10)>>10) + scoreshift );
+		frame->draw(*player->loadedmap->blitbuf,((i-2)*40) + ((sinus512[xcnt]*10)>>10)+4, 414 + ((sinus512[ycnt]*10)>>10) + scoreshift );
 	      }
 	  }
 	else
@@ -193,7 +193,7 @@ void score_display(VIEWPORT *player)
 	    frame = anim_forceframe (orgdiamond, 0);
 	    if (world !=3)
 	      {
-		frame->draw(*player->loadedmap->blitbuf,70 + (i*40) + ((sinus512[xcnt]*10)>>10), 414 + ((sinus512[ycnt]*10)>>10) + scoreshift );
+		frame->draw(*player->loadedmap->blitbuf,((i-2)*40) + ((sinus512[xcnt]*10)>>10)+4, 414 + ((sinus512[ycnt]*10)>>10) + scoreshift );
 	      }
 	  }
       }

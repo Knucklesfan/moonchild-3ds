@@ -2947,7 +2947,7 @@ int hoirise_live (OBJECT *object, UINT32 param)
 		//            plotapix(px,py,*(moonsurface));
 
 	      if (px >= 400) goto skip;
-	      if (py >= 240) goto skip;
+	      if (py >= 480) goto skip;
 
 #if 1  // moet nog geprogged worden!
 
@@ -2998,7 +2998,7 @@ int hoirise_live (OBJECT *object, UINT32 param)
 		//            plotapix(px,py,*(moonsurface));
 
 	      if (px >= 400) goto skip2;
-	      if (py >= 240) goto skip2;
+	      if (py >= 480) goto skip2;
 
 #if 1  // moet nog geprogged worden!
 
@@ -3261,7 +3261,7 @@ int hoicollapse_live (OBJECT *object, UINT32 param)
 	      //            plotapix(px,py,*(moonsurface));
 
 	      //  if (px > 400) goto skip;
-	      if (py > 240) goto skip;
+	      if (py > 480) goto skip;
 
 #if 0
 

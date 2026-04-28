@@ -817,7 +817,7 @@ void update(VIEWPORT *player)
           fey = y*32+32-sm_y;
 
           if (fex >= 400) fex = 400;
-          if (fey >= 240) fey = 240;
+          if (fey >= 480) fey = 480;
 
           if (fsx >= -32 && fsx < 0)
           {
@@ -831,7 +831,7 @@ void update(VIEWPORT *player)
             fsy = 0;
           }
 
-          if (fsx < 400 && fsy < 240 && fex >= 0 && fey >= 0)
+          if (fsx < 400 && fsy < 480 && fex >= 0 && fey >= 0)
           {
             para->draw_nokey(*player1.loadedmap->blitbuf, sx, sy, fsx, fsy, fex, fey);
           }
@@ -882,7 +882,7 @@ void update(VIEWPORT *player)
           fey = y*32+32-sm_y;
 
           if (fex >= 400) fex = 400;
-          if (fey >= 240) fey = 240;
+          if (fey >= 480) fey = 480;
 
           if (fsx >= -32 && fsx < 0)
           {
@@ -896,7 +896,7 @@ void update(VIEWPORT *player)
             fsy = 0;
           }
 
-          if (fsx < 400 && fsy < 240 && fex >= 0 && fey >= 0)
+          if (fsx < 400 && fsy < 480 && fex >= 0 && fey >= 0)
           {
             para->draw_nokey(*player1.loadedmap->blitbuf, sx, sy, fsx, fsy, fex, fey);
           }
@@ -1129,7 +1129,7 @@ void rebuild(VIEWPORT *player)
 
   MGL_makeCurrentDC(mydc);
 
-  MGL_fillRectCoord(624,0,400,240);
+  MGL_fillRectCoord(624,0,400,480);
 
   MGL_makeCurrentDC(video->get_dc());
 #endif
@@ -1214,7 +1214,7 @@ void plotapix(UINT16 x, UINT16 y, UBYTE col)
   UBYTE *srcsurface;
 
   if (x > 400) return;
-  if (y > 240) return;
+  if (y > 480) return;
 
   srcdc = player1.curmap->blitbuf->get_dc();
   srcsurface = (UBYTE *)srcdc->surface;

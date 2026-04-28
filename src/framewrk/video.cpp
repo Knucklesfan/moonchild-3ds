@@ -217,7 +217,7 @@ void Cvideo::swap(void)
     if((g_RenderMode%NUMRENDERMODES)==0) // nearest neigbour
     {
         SrcPtr = (unsigned char *)m_OffscreenBuf;
-        for (unsigned int y = 0; y < 240; y++) {
+        for (unsigned int y = 0; y < 480; y++) {
             for (unsigned int x = 0; x < (400>>5); x++) {
 //                *DestBuf++ = m_DibPalette32[*SrcPtr++];
                 UNROLL32
@@ -518,7 +518,7 @@ void Cvideo::Line( int x1, int y1, int x2, int y2, char color )
 	{ 
         unsigned int px = x1>>FPP;
         unsigned int py = y1>>FPP;
-        if(px<400 && py<240)
+        if(px<400 && py<480)
         {
             Screen[(py * 400) + px] = color; 
         }

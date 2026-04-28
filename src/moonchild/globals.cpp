@@ -65,7 +65,7 @@ UINT32 blackdiamondcollocations[13][7]; //7 per level... 13 levels
 UINT16 cliptlx = 0;
 UINT16 cliptly = 0;
 UINT16 clipbrx = 400;
-UINT16 clipbry = 240;
+UINT16 clipbry = 480;
 
 UINT16 sokomoved;
 UINT16 editflg = 0;            /* we don't start of in the editor */
