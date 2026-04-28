@@ -66,7 +66,7 @@ LDFLAGS     = -specs=3dsx.specs $(ARCH) -Wl,-Map,$(notdir $*.map)
 #---------------------------------------------------------------------------------
 # Libraries needed to link into the executable.
 #---------------------------------------------------------------------------------
-LIBS := -lSDL2_mixer -lSDL2 -lSDL2main -lopusfile -lopus -logg -liconv -lxmp -lctru -lm 
+LIBS := -lSDL2_mixer -lSDL2 -lSDL2main -lopusfile -lopus -logg -liconv -lxmp -lcitro2d -lcitro3d -lctru -lm 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing
 # include and lib

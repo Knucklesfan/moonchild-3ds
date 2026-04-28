@@ -2,6 +2,7 @@
 #include "Game.h"
 #include "Util.h"
 #include <SDL.h>
+
 #include <filesystem>
 #include <cstdint>
 #include <cstdio>
@@ -16,6 +17,7 @@
 namespace {
 
 int screenWidth = 400;
+int bottomWidth = 320;
 int screenHeight = 240;
 int bytesPerPixel = 4;
 int ticksPerSecond = 60;
@@ -24,13 +26,16 @@ Uint64 performanceFrequency = 0;
 Uint64 tickIntervalTicks = 0;
 Uint64 nextTickTime = 0;
 
-SDL_Window *window = nullptr;
-SDL_Renderer *renderer = nullptr;
-SDL_Texture *frameTexture = nullptr;
+// SDL_Window *window = nullptr;
+// SDL_Renderer *renderer = nullptr;
+// SDL_Texture *frameTexture = nullptr;
 
-uint8_t *pixelBuffer = nullptr;
+u8 *pixelBuffer = nullptr;
+u8 *rightBuffer = nullptr;
+u8 *bottomBuffer = nullptr;
+
 int pixelBufferPitch = 0;
-
+int bottomBufferPitch = 0;
 #define JOY_A     0
 #define JOY_B     1
 #define JOY_X     2
@@ -41,6 +46,16 @@ int pixelBufferPitch = 0;
 #define JOY_UP    6
 #define JOY_RIGHT 4
 #define JOY_DOWN  7
+enum {
+  OFF_A = 0, OFF_B, OFF_SELECT, OFF_START,
+  OFF_DRIGHT, OFF_DLEFT, OFF_DUP, OFF_DDOWN,
+  OFF_R, OFF_L, OFF_X, OFF_Y,
+  OFF_12, OFF_13, OFF_ZL, OFF_ZR,
+  OFF_16, OFF_17, OFF_18, OFF_19,
+  OFF_TOUCH, OFF_21, OFF_22, OFF_23,
+  OFF_CSTICK_RIGHT, OFF_CSTICK_LEFT, OFF_CSTICK_UP, OFF_CSTICK_DOWN,
+  OFF_CPAD_RIGHT, OFF_CPAD_LEFT, OFF_CPAD_UP, OFF_CPAD_DOWN
+};
 
 void waitUntilNextTickBoundary() {
   for (;;) {
@@ -65,74 +80,81 @@ void advanceTickSchedule() {
 }
 
 bool initSDL() {
-  if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER | SDL_INIT_JOYSTICK) != 0) {
-    fprintf(stderr, "SDL_Init failed: %s\n", SDL_GetError());
-    return false;
-  }
-  performanceFrequency = SDL_GetPerformanceFrequency();
-  tickIntervalTicks = performanceFrequency / (Uint64)ticksPerSecond;
-  nextTickTime = SDL_GetPerformanceCounter();
+    if (SDL_Init(SDL_INIT_AUDIO | SDL_INIT_TIMER) != 0) {
+        fprintf(stderr, "SDL_Init failed: %s\n", SDL_GetError());
+        return false;
+    }
+    performanceFrequency = SDL_GetPerformanceFrequency();
+    tickIntervalTicks = performanceFrequency / (Uint64)ticksPerSecond;
+    nextTickTime = SDL_GetPerformanceCounter();
 
-  window = SDL_CreateWindow("Moon Child", SDL_WINDOWPOS_CENTERED,
-                            SDL_WINDOWPOS_CENTERED, screenWidth, screenHeight, SDL_WINDOW_RESIZABLE);
-  if (!window) {
-    fprintf(stderr, "SDL_CreateWindow failed: %s\n", SDL_GetError());
-    return false;
-  }
+    pixelBufferPitch = screenWidth * bytesPerPixel;
+    bottomBufferPitch = bottomWidth * bytesPerPixel;
+    
+    pixelBuffer = new uint8_t[pixelBufferPitch * screenHeight];
+    rightBuffer = new uint8_t[pixelBufferPitch * screenHeight];
+    bottomBuffer = new uint8_t[bottomBufferPitch * screenHeight];
 
-  renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
-  if (!renderer) {
-    fprintf(stderr, "SDL_CreateRenderer failed: %s\n", SDL_GetError());
+    memset(pixelBuffer, 0, pixelBufferPitch * screenHeight);
+    memset(rightBuffer, 0, pixelBufferPitch * screenHeight);
+    memset(bottomBuffer, 0, bottomBufferPitch * screenHeight);
 
-    return false;
-  }
-  SDL_RenderSetLogicalSize(renderer, screenWidth, screenHeight);
-  SDL_RenderSetVSync(renderer, 1);
+    gfxInitDefault();
+    gfxSet3D(true); // Activate stereoscopic 3D
 
-  frameTexture =
-      SDL_CreateTexture(renderer, SDL_PIXELFORMAT_BGRA32, SDL_TEXTUREACCESS_STREAMING,
-                        screenWidth, screenHeight);
-  if (!frameTexture) {
-    fprintf(stderr, "SDL_CreateTexture failed: %s\n", SDL_GetError());
+	  gfxSetDoubleBuffering(GFX_TOP, true);
+	  gfxSetDoubleBuffering(GFX_BOTTOM, true);
 
-    return false;
-  }
-  SDL_SetTextureBlendMode(frameTexture, SDL_BLENDMODE_NONE);
-  
-  pixelBufferPitch = screenWidth * bytesPerPixel;
-  pixelBuffer = new uint8_t[pixelBufferPitch * screenHeight];
-  memset(pixelBuffer, 0, pixelBufferPitch * screenHeight);
-	consoleInit(GFX_BOTTOM, NULL);
-  SDL_GameController* c = SDL_GameControllerOpen(0);
+    // consoleInit(GFX_BOTTOM, NULL);
 
-  return true;
+    return true;
 }
 
 void shutdownSDL() {
   delete[] pixelBuffer;
   pixelBuffer = nullptr;
 
-  if (frameTexture) {
-    SDL_DestroyTexture(frameTexture);
-    frameTexture = nullptr;
-  }
-  if (renderer) {
-    SDL_DestroyRenderer(renderer);
-    renderer = nullptr;
-  }
-  if (window) {
-    SDL_DestroyWindow(window);
-    window = nullptr;
-  }
+  // if (frameTexture) {
+  //   SDL_DestroyTexture(frameTexture);
+  //   frameTexture = nullptr;
+  // }
+  // if (renderer) {
+  //   SDL_DestroyRenderer(renderer);
+  //   renderer = nullptr;
+  // }
+  // if (window) {
+  //   SDL_DestroyWindow(window);
+  //   window = nullptr;
+  // }
   SDL_Quit();
 }
+void renderFb(u8* pixelBuffer, gfx3dSide_t screen, gfxScreen_t position, int width, int height) {
+  u8* fb = gfxGetFramebuffer(position, screen, NULL, NULL);
+  const int inStride  = screenWidth * 4;
+  const int outStride = screenHeight * 3;
+  for (int x = 0; x < screenWidth; ++x) {
+      unsigned char *out = fb + x * outStride;
+      const unsigned char *inRow = pixelBuffer + (screenHeight - 1) * inStride + x * 4;
+      for (int y = 0; y < screenHeight; ++y) {
+          out[0] = inRow[0];
+          out[1] = inRow[1];
+          out[2] = inRow[2];
+          out += 3;
+          inRow -= inStride; // move up one input row since we're at the bottom
+      }
+  }  // memcpy(fb, pixelBuffer, screenWidth * bytesPerPixel * screenHeight);
 
+}
 void presentFrame() {
-  SDL_UpdateTexture(frameTexture, nullptr, pixelBuffer, pixelBufferPitch);
-  SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-  SDL_RenderClear(renderer);
-  SDL_RenderCopy(renderer, frameTexture, nullptr, nullptr);
-  SDL_RenderPresent(renderer);
+  renderFb(rightBuffer,GFX_RIGHT,GFX_TOP, screenWidth, screenHeight);
+  renderFb(pixelBuffer,GFX_LEFT,GFX_TOP, screenWidth, screenHeight);
+
+  gfxFlushBuffers();
+  gfxSwapBuffers();
+
+  //Wait for VBlank
+  gspWaitForVBlank();
+
 }
 
 void syncMouse() {
@@ -208,150 +230,209 @@ int SDL_main(int argc, char **argv) {
   bool running = true;
   while (running) {
     // printf("looping");
-    SDL_Event e;
-    while (SDL_PollEvent(&e)) {
-      if (e.type == SDL_QUIT) {
-        running = false;
-      }
-      if (e.type == SDL_KEYDOWN && e.key.repeat == 0) {
-        switch (e.key.keysym.scancode) {
-          case SDL_SCANCODE_UP:
-            keyDown(SDL_SCANCODE_UP);
-            break;
-          case SDL_SCANCODE_DOWN:
-            keyDown(SDL_SCANCODE_DOWN);
-          break;
-          case SDL_SCANCODE_LEFT:
-            keyDown(SDL_SCANCODE_LEFT);
-            break;
-          case SDL_SCANCODE_RIGHT:
-            keyDown(SDL_SCANCODE_RIGHT);
-            break;
-          case SDL_SCANCODE_SPACE:
-            keyDown(SDL_SCANCODE_SPACE);
-            break;
-          case SDL_SCANCODE_ESCAPE:
-            keyDown(SDL_SCANCODE_ESCAPE);
-            break;
-          case SDL_SCANCODE_E:
-            keyDown(SDL_SCANCODE_E);
-            break;
-          case SDL_SCANCODE_P:
-            keyDown(SDL_SCANCODE_P);
-          break;
-          case SDL_SCANCODE_RETURN:
-            if (e.key.keysym.mod & KMOD_ALT) {
-              SDL_SetWindowFullscreen(window, SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN_DESKTOP ? 0 : SDL_WINDOW_FULLSCREEN_DESKTOP);
-            }
-            break;
-          default:
-            break;
-        }
-      }
-      if (e.type == SDL_KEYUP && e.key.repeat == 0) {
-        switch (e.key.keysym.scancode) {
-          case SDL_SCANCODE_UP:
-            keyUp(SDL_SCANCODE_UP);
-            break;
-          case SDL_SCANCODE_DOWN:
-            keyUp(SDL_SCANCODE_DOWN);
-            break;
-          case SDL_SCANCODE_LEFT:
-            keyUp(SDL_SCANCODE_LEFT);
-            break;
-          case SDL_SCANCODE_RIGHT:
-            keyUp(SDL_SCANCODE_RIGHT);
-            break;
-          case SDL_SCANCODE_SPACE:
-            keyUp(SDL_SCANCODE_SPACE);
-            break;
-          case SDL_SCANCODE_ESCAPE:
-            keyUp(SDL_SCANCODE_ESCAPE);
-            break;
-          case SDL_SCANCODE_E:
-            keyUp(SDL_SCANCODE_E);
-            break;
-          case SDL_SCANCODE_P:
-            keyUp(SDL_SCANCODE_P);
-            break;
-          default:
-            break;
-        }
-      }
-      if (e.type == SDL_JOYBUTTONDOWN ) {
-        printf("%d\n",e.cbutton.button);
-        switch (e.cbutton.button) {
-          case JOY_UP:
-            printf("SDL_SCANCODE_UP\n");
-            keyDown(SDL_SCANCODE_UP);
-            break;
-          case JOY_DOWN:
-            printf("SDL_SCANCODE_DOWN\n");
-            keyDown(SDL_SCANCODE_DOWN);
-            break;
-          case JOY_LEFT:
-            printf("SDL_SCANCODE_LEFT\n");
-            keyDown(SDL_SCANCODE_LEFT);
-            break;
-          case JOY_RIGHT:
-            printf("SDL_SCANCODE_RIGHT\n");
-            keyDown(SDL_SCANCODE_RIGHT);
-            break;
-          case JOY_A:
-            printf("SDL_SCANCODE_UP\n");
-            keyDown(SDL_SCANCODE_UP);
-            break;
-          case JOY_X:
-            printf("SDL_SCANCODE_SPACE\n");
-            keyDown(SDL_SCANCODE_SPACE);
-            break;
-          case JOY_PLUS:
-            printf("SDL_SCANCODE_SPACE\n");
-            keyDown(SDL_SCANCODE_SPACE);
-            break;
-          case JOY_L:
-            printf("SDL_SCANCODE_ESCAPE\n");
-            keyDown(SDL_SCANCODE_ESCAPE);
+    // SDL_Event e;
+    // while (SDL_PollEvent(&e)) {
+    //   if (e.type == SDL_QUIT) {
+    //     running = false;
+    //   }
+    //   if (e.type == SDL_KEYDOWN && e.key.repeat == 0) {
+    //     switch (e.key.keysym.scancode) {
+    //       case SDL_SCANCODE_UP:
+    //         keyDown(SDL_SCANCODE_UP);
+    //         break;
+    //       case SDL_SCANCODE_DOWN:
+    //         keyDown(SDL_SCANCODE_DOWN);
+    //       break;
+    //       case SDL_SCANCODE_LEFT:
+    //         keyDown(SDL_SCANCODE_LEFT);
+    //         break;
+    //       case SDL_SCANCODE_RIGHT:
+    //         keyDown(SDL_SCANCODE_RIGHT);
+    //         break;
+    //       case SDL_SCANCODE_SPACE:
+    //         keyDown(SDL_SCANCODE_SPACE);
+    //         break;
+    //       case SDL_SCANCODE_ESCAPE:
+    //         keyDown(SDL_SCANCODE_ESCAPE);
+    //         break;
+    //       case SDL_SCANCODE_E:
+    //         keyDown(SDL_SCANCODE_E);
+    //         break;
+    //       case SDL_SCANCODE_P:
+    //         keyDown(SDL_SCANCODE_P);
+    //       break;
+    //       case SDL_SCANCODE_RETURN:
+    //         if (e.key.keysym.mod & KMOD_ALT) {
+    //           // SDL_SetWindowFullscreen(window, SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN_DESKTOP ? 0 : SDL_WINDOW_FULLSCREEN_DESKTOP);
+    //         }
+    //         break;
+    //       default:
+    //         break;
+    //     }
+    //   }
+    //   if (e.type == SDL_KEYUP && e.key.repeat == 0) {
+    //     switch (e.key.keysym.scancode) {
+    //       case SDL_SCANCODE_UP:
+    //         keyUp(SDL_SCANCODE_UP);
+    //         break;
+    //       case SDL_SCANCODE_DOWN:
+    //         keyUp(SDL_SCANCODE_DOWN);
+    //         break;
+    //       case SDL_SCANCODE_LEFT:
+    //         keyUp(SDL_SCANCODE_LEFT);
+    //         break;
+    //       case SDL_SCANCODE_RIGHT:
+    //         keyUp(SDL_SCANCODE_RIGHT);
+    //         break;
+    //       case SDL_SCANCODE_SPACE:
+    //         keyUp(SDL_SCANCODE_SPACE);
+    //         break;
+    //       case SDL_SCANCODE_ESCAPE:
+    //         keyUp(SDL_SCANCODE_ESCAPE);
+    //         break;
+    //       case SDL_SCANCODE_E:
+    //         keyUp(SDL_SCANCODE_E);
+    //         break;
+    //       case SDL_SCANCODE_P:
+    //         keyUp(SDL_SCANCODE_P);
+    //         break;
+    //       default:
+    //         break;
+    //     }
+    //   }
+    //   if (e.type == SDL_JOYBUTTONDOWN ) {
+    //     printf("%d\n",e.cbutton.button);
+    //     switch (e.cbutton.button) {
+    //       case JOY_UP:
+    //         printf("SDL_SCANCODE_UP\n");
+    //         keyDown(SDL_SCANCODE_UP);
+    //         break;
+    //       case JOY_DOWN:
+    //         printf("SDL_SCANCODE_DOWN\n");
+    //         keyDown(SDL_SCANCODE_DOWN);
+    //         break;
+    //       case JOY_LEFT:
+    //         printf("SDL_SCANCODE_LEFT\n");
+    //         keyDown(SDL_SCANCODE_LEFT);
+    //         break;
+    //       case JOY_RIGHT:
+    //         printf("SDL_SCANCODE_RIGHT\n");
+    //         keyDown(SDL_SCANCODE_RIGHT);
+    //         break;
+    //       case JOY_A:
+    //         printf("SDL_SCANCODE_UP\n");
+    //         keyDown(SDL_SCANCODE_UP);
+    //         break;
+    //       case JOY_X:
+    //         printf("SDL_SCANCODE_SPACE\n");
+    //         keyDown(SDL_SCANCODE_SPACE);
+    //         break;
+    //       case JOY_PLUS:
+    //         printf("SDL_SCANCODE_SPACE\n");
+    //         keyDown(SDL_SCANCODE_SPACE);
+    //         break;
+    //       case JOY_L:
+    //         printf("SDL_SCANCODE_ESCAPE\n");
+    //         keyDown(SDL_SCANCODE_ESCAPE);
 
-            break;
-          default:
-            break;
-        }
-      }
-      if (e.type == SDL_JOYBUTTONUP) {
-        switch (e.cbutton.button) {
-          case JOY_UP:
-            keyUp(SDL_SCANCODE_UP);
-            break;
-          case JOY_DOWN:
-            keyUp(SDL_SCANCODE_DOWN);
-            break;
-          case JOY_LEFT:
-            keyUp(SDL_SCANCODE_LEFT);
-            break;
-          case JOY_RIGHT:
-            keyUp(SDL_SCANCODE_RIGHT);
-            break;
-          case JOY_A:
-            keyUp(SDL_SCANCODE_UP);
-            break;
-          case JOY_X:
-            keyUp(SDL_SCANCODE_SPACE);
-            break;
-          case JOY_PLUS:
-            keyUp(SDL_SCANCODE_SPACE);
-            break;
-          case JOY_L:
-            keyUp(SDL_SCANCODE_ESCAPE);
-            break;
-          default:
-            break;
-        }
-      }
+    //         break;
+    //       default:
+    //         break;
+    //     }
+    //   }
+    //   if (e.type == SDL_JOYBUTTONUP) {
+    //     switch (e.cbutton.button) {
+    //       case JOY_UP:
+    //         keyUp(SDL_SCANCODE_UP);
+    //         break;
+    //       case JOY_DOWN:
+    //         keyUp(SDL_SCANCODE_DOWN);
+    //         break;
+    //       case JOY_LEFT:
+    //         keyUp(SDL_SCANCODE_LEFT);
+    //         break;
+    //       case JOY_RIGHT:
+    //         keyUp(SDL_SCANCODE_RIGHT);
+    //         break;
+    //       case JOY_A:
+    //         keyUp(SDL_SCANCODE_UP);
+    //         break;
+    //       case JOY_X:
+    //         keyUp(SDL_SCANCODE_SPACE);
+    //         break;
+    //       case JOY_PLUS:
+    //         keyUp(SDL_SCANCODE_SPACE);
+    //         break;
+    //       case JOY_L:
+    //         keyUp(SDL_SCANCODE_ESCAPE);
+    //         break;
+    //       default:
+    //         break;
+    //     }
+    //   }
+    // }
+
+    // syncMouse();
+		hidScanInput();
+
+		//hidKeysDown returns information about which buttons have been just pressed (and they weren't in the previous frame)
+		u32 kDown = hidKeysDown();
+		//hidKeysHeld returns information about which buttons have are held down in this frame
+		u32 kHeld = hidKeysHeld();
+		//hidKeysUp returns information about which buttons have been just released
+		u32 kUp = hidKeysUp();
+
+    if (kDown & (1u << OFF_DUP) || kDown & (1u << OFF_CPAD_UP)) {
+      printf("SDL_SCANCODE_UP\n");
+      keyDown(SDL_SCANCODE_UP);
+    } else if (kDown & (1u << OFF_DDOWN) || kDown & (1u << OFF_CPAD_DOWN)) {
+      printf("SDL_SCANCODE_DOWN\n");
+      keyDown(SDL_SCANCODE_DOWN);
+    } else if (kDown & (1u << OFF_DLEFT) || kDown & (1u << OFF_CPAD_LEFT)) {
+      printf("SDL_SCANCODE_LEFT\n");
+      keyDown(SDL_SCANCODE_LEFT);
+    } else if (kDown & (1u << OFF_DRIGHT) || kDown & (1u << OFF_CPAD_RIGHT)) {
+      printf("SDL_SCANCODE_RIGHT\n");
+      keyDown(SDL_SCANCODE_RIGHT);
+    } else if (kDown & ((1u << OFF_B) | (1u << OFF_A))) {
+      printf("SDL_SCANCODE_UP\n");
+      keyDown(SDL_SCANCODE_UP);
+    } else if (kDown & ((1u << OFF_X) | (1u << OFF_Y))) {
+      printf("SDL_SCANCODE_SPACE\n");
+      keyDown(SDL_SCANCODE_SPACE);
+    } else if (kDown & (1u << OFF_START)) {
+      printf("SDL_SCANCODE_SPACE\n");
+      keyDown(SDL_SCANCODE_SPACE);
+    } else if (kDown & (1u << OFF_TOUCH)) {
+      printf("SDL_SCANCODE_ESCAPE\n");
+      keyDown(SDL_SCANCODE_ESCAPE);
     }
 
-    syncMouse();
-
+    /* Key-up handling (map bit -> keyUp), including C-stick */
+    if (kUp & ((1u << OFF_DUP) | (1u << OFF_CPAD_UP))) {
+      keyUp(SDL_SCANCODE_UP);
+    }
+    if (kUp & ((1u << OFF_DDOWN) | (1u << OFF_CPAD_DOWN))) {
+      keyUp(SDL_SCANCODE_DOWN);
+    }
+    if (kUp & ((1u << OFF_DLEFT) | (1u << OFF_CPAD_LEFT))) {
+      keyUp(SDL_SCANCODE_LEFT);
+    }
+    if (kUp & ((1u << OFF_DRIGHT) | (1u << OFF_CPAD_RIGHT))) {
+      keyUp(SDL_SCANCODE_RIGHT);
+    }
+    if (kUp & ((1u << OFF_B) | (1u << OFF_A))) {
+      keyUp(SDL_SCANCODE_UP);
+    }
+    if (kUp & ((1u << OFF_X) | (1u << OFF_Y))) {
+      keyUp(SDL_SCANCODE_SPACE);
+    }
+    if (kUp & (1u << OFF_START)) {
+      keyUp(SDL_SCANCODE_SPACE);
+    }
+    if (kUp & (1u << OFF_TOUCH)) {
+      keyUp(SDL_SCANCODE_ESCAPE);
+    }    
     waitUntilNextTickBoundary();
 
     int keyCount = 0;
