@@ -1,4 +1,5 @@
 #include "frm_int.hpp"
+#include "globals.hpp"
 
 PALETTEENTRY        dumpe[1024];        // last entered palette  (for requests)
 PALETTEENTRY        pe[1024];        // last entered palette  (for requests)
@@ -181,13 +182,18 @@ void Cvideo::DrawLoading(void)
      
 }
 
-#define UNROLL *DestBuf++ = m_DibPalette32[*SrcPtr++];
+#define UNROLL m_DibPalette32[*SrcPtr++];
 #define UNROLL8 UNROLL UNROLL UNROLL UNROLL UNROLL UNROLL UNROLL UNROLL
 #define UNROLL32 UNROLL8 UNROLL8 UNROLL8 UNROLL8
 
 void Cvideo::swap(void)
 {
 	static int interlace;
+	u8* btm = nullptr;
+	if(renderHeight > 240) {
+		btm = gfxGetFramebuffer(GFX_BOTTOM, GFX_LEFT, NULL, NULL);
+	}
+	u8* top = gfxGetFramebuffer(GFX_TOP, GFX_LEFT, NULL, NULL);
 
 	
 	if(g_RenderMode>=4)
@@ -217,10 +223,44 @@ void Cvideo::swap(void)
     if((g_RenderMode%NUMRENDERMODES)==0) // nearest neigbour
     {
         SrcPtr = (unsigned char *)m_OffscreenBuf;
-        for (unsigned int y = 0; y < 480; y++) {
-            for (unsigned int x = 0; x < (400>>5); x++) {
+        for (unsigned int x = 0; x < 400; x++) {
+			int othery = 0;
+            for (unsigned int y = renderHeight; y >0; y--) {
+				int source = SrcPtr[(y*(400))+(x)];
+				if(y > 240) {
+					if(x > (400-320)/2 && x-(400-320)/2 < 320) {
+					btm[(x-(400-320)/2)*(240*3)+(othery)*3] = m_BPalette[source]*4; 
+					btm[(x-(400-320)/2)*(240*3)+(othery)*3+1] = m_GPalette[source]*4; 
+					btm[(x-(400-320)/2)*(240*3)+(othery)*3+2] = m_RPalette[source]*4;
+					}
+				}
+				else {
+					top[x*(240*3)+(othery)*3] = m_BPalette[source]*4;
+					top[x*(240*3)+(othery)*3+1] = m_GPalette[source]*4; 
+					top[x*(240*3)+(othery)*3+2] = m_RPalette[source]*4;
+				}
+				;
+				othery++;
+
+				}
+
 //                *DestBuf++ = m_DibPalette32[*SrcPtr++];
-                UNROLL32
+                // UNROLL32
+				// if(y > 240) {
+				// if(x > (400-320)/2 && x-(400-320)/2 < 320) {
+				// 	btm[(x-(400-320)/2)*(240*3)+(othery)*3] = UNROLL; 
+				// 	btm[(x-(400-320)/2)*(240*3)+(othery)*3+1] = UNROLL; 
+				// 	btm[(x-(400-320)/2)*(240*3)+(othery)*3+2] = UNROLL;
+				// 	UNROLL
+				// }
+				// }
+				// else {
+				// top[x*(240)+(y%320)*3] = UNROLL; 
+				// top[x*(240)+(y%320)*3+1] = UNROLL; 
+				// top[x*(240)+(y%320)*3+2] = UNROLL;
+				// UNROLL
+				// }
+
             }
         }
     }
@@ -321,7 +361,7 @@ void Cvideo::swap(void)
  */
 
 	
-}
+
 
 
 unsigned char charset[36*10] = 
@@ -518,7 +558,7 @@ void Cvideo::Line( int x1, int y1, int x2, int y2, char color )
 	{ 
         unsigned int px = x1>>FPP;
         unsigned int py = y1>>FPP;
-        if(px<400 && py<480)
+        if(px<400 && py<renderHeight)
         {
             Screen[(py * 400) + px] = color; 
         }

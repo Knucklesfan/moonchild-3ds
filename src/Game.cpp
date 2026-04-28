@@ -4,6 +4,9 @@
 #include "moonchild/mc.hpp"
 #include "moonchild/globals.hpp"
 #include "moonchild/prefs.hpp"
+
+#include <SDL.h>
+
 // #include "livesplit.hpp"
 
 int g_MouseFlg = 0;

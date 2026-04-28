@@ -1,3 +1,4 @@
+// #include "globals.hpp"
 #include "Audio.h"
 #include "Game.h"
 #include "Util.h"
@@ -129,8 +130,8 @@ void shutdownSDL() {
   SDL_Quit();
 }
 void renderFb(u8* pixelBuffer, gfx3dSide_t screen, gfxScreen_t position, int width, int height) {
-  u8* btm = gfxGetFramebuffer(GFX_BOTTOM, screen, NULL, NULL);
-  u8* top = gfxGetFramebuffer(GFX_TOP, screen, NULL, NULL);
+  // u8* btm = gfxGetFramebuffer(GFX_BOTTOM, screen, NULL, NULL);
+  // u8* top = gfxGetFramebuffer(GFX_TOP, screen, NULL, NULL);
 
   // const int inStride  = screenWidth * 4;
   // const int outStride = realHeight * 3;
@@ -145,28 +146,28 @@ void renderFb(u8* pixelBuffer, gfx3dSide_t screen, gfxScreen_t position, int wid
   //         inRow -= inStride; // move up one input row since we're at the bottom
   //     }
   // }  // memcpy(fb, pixelBuffer, screenWidth * bytesPerPixel * screenHeight);
-  for(int x= 0; x < screenWidth; x++) {
-    int othery = 0;
-    for(int y = screenHeight; y > 0; y--) {
-      if(y > realHeight) {
-        if(x > (screenWidth-320)/2 && x-(screenWidth-320)/2 < 320) {
-          btm[(x-(screenWidth-320)/2)*(realHeight*3)+(othery)*3] = pixelBuffer[(y*(screenWidth*4))+(x)*4]; 
-          btm[(x-(screenWidth-320)/2)*(realHeight*3)+(othery)*3+1] = pixelBuffer[y*(screenWidth*4)+(x)*4+1]; 
-          btm[(x-(screenWidth-320)/2)*(realHeight*3)+(othery)*3+2] = pixelBuffer[y*(screenWidth*4)+(x)*4+2];
-        }
-      }
-      else {
-        top[x*(realHeight*3)+(othery%realHeight)*3] = pixelBuffer[(y*(screenWidth*4))+x*4]; 
-        top[x*(realHeight*3)+(othery%realHeight)*3+1] = pixelBuffer[y*(screenWidth*4)+x*4+1]; 
-        top[x*(realHeight*3)+(othery%realHeight)*3+2] = pixelBuffer[y*(screenWidth*4)+x*4+2];
-      }
-      othery++;
-    }
-  }
+  // for(int x= 0; x < screenWidth; x++) {
+  //   int othery = 0;
+  //   for(int y = screenHeight; y > 0; y--) {
+  //     if(y > realHeight) {
+  //       if(x > (screenWidth-320)/2 && x-(screenWidth-320)/2 < 320) {
+  //         btm[(x-(screenWidth-320)/2)*(realHeight*3)+(othery)*3] = pixelBuffer[(y*(screenWidth*4))+(x)*4]; 
+  //         btm[(x-(screenWidth-320)/2)*(realHeight*3)+(othery)*3+1] = pixelBuffer[y*(screenWidth*4)+(x)*4+1]; 
+  //         btm[(x-(screenWidth-320)/2)*(realHeight*3)+(othery)*3+2] = pixelBuffer[y*(screenWidth*4)+(x)*4+2];
+  //       }
+  //     }
+  //     else {
+  //       top[x*(realHeight*3)+(othery%realHeight)*3] = pixelBuffer[(y*(screenWidth*4))+x*4]; 
+  //       top[x*(realHeight*3)+(othery%realHeight)*3+1] = pixelBuffer[y*(screenWidth*4)+x*4+1]; 
+  //       top[x*(realHeight*3)+(othery%realHeight)*3+2] = pixelBuffer[y*(screenWidth*4)+x*4+2];
+  //     }
+  //     othery++;
+  //   }
+  // }
 }
 void presentFrame() {
   // renderFb(rightBuffer,GFX_RIGHT,GFX_TOP, screenWidth, screenHeight);
-  renderFb(pixelBuffer,GFX_LEFT,GFX_TOP, screenWidth, realHeight);
+  // renderFb(pixelBuffer,GFX_LEFT,GFX_TOP, screenWidth, realHeight);
   // renderFb(pixelBuffer,GFX_LEFT,GFX_BOTTOM, 320, realHeight);
 
   gfxFlushBuffers();
@@ -453,7 +454,7 @@ int SDL_main(int argc, char **argv) {
     if (kUp & (1u << OFF_TOUCH)) {
       keyUp(SDL_SCANCODE_ESCAPE);
     }    
-    waitUntilNextTickBoundary();
+    // waitUntilNextTickBoundary();
 
     int keyCount = 0;
     Uint8 *keyboardState = (Uint8 *)SDL_GetKeyboardState(&keyCount);

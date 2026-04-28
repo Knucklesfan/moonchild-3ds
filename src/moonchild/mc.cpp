@@ -729,9 +729,9 @@ HEARTBEAT_FN MC_testje1(void)
 
 
   video->palette(titlepal);
-	titlepic->draw_nokey(*vidblitbuf,0,0,0,0,400,480);
+	titlepic->draw_nokey(*vidblitbuf,0,0,0,0,400,renderHeight);
   video->swap();
-	titlepic->draw_nokey(*vidblitbuf,0,0,0,0,400,480);
+	titlepic->draw_nokey(*vidblitbuf,0,0,0,0,400,renderHeight);
 
 
 	return (HEARTBEAT_FN) MC_testje2;
@@ -776,7 +776,7 @@ HEARTBEAT_FN framework_InitGame(Cvideo *newvideo, Caudio *newaudio, Ctimer *newt
   video->scansync();
 
   vidblitbuf = new Cblitbuf(video);
-  vidblitbuf->set_clipping(0, 0, 400, 480);
+  vidblitbuf->set_clipping(0, 0, 400, renderHeight);
 
 
 
@@ -1143,11 +1143,11 @@ int startmovie( char *movname, char *movkadername)
       
   if (vgaflg == 0)
   {
-    movbuf = new Cblitbuf(200,120,0,0,0);   //400*480 if zooming is on!
+    movbuf = new Cblitbuf(200,120,0,0,0);   //400*renderHeight if zooming is on!
   }
   else
   {
-    movbuf = new Cblitbuf(400,480,0,0,0);   //400*480 if zooming is on!
+    movbuf = new Cblitbuf(400,renderHeight,0,0,0);   //400*renderHeight if zooming is on!
   }
   
 //  vgassert(movbuf);
@@ -1168,13 +1168,13 @@ int startmovie( char *movname, char *movkadername)
   }
 
   video->clear(0);
-  if (vgaflg == 0)movkaderbuf->draw(*vidblitbuf, 0, 0, 0, 0, 400, 480);
+  if (vgaflg == 0)movkaderbuf->draw(*vidblitbuf, 0, 0, 0, 0, 400, renderHeight);
   video->swap();
   video->clear(0);
-  if (vgaflg == 0)movkaderbuf->draw(*vidblitbuf, 0, 0, 0, 0, 400, 480);
+  if (vgaflg == 0)movkaderbuf->draw(*vidblitbuf, 0, 0, 0, 0, 400, renderHeight);
   video->swap();
   video->clear(0);
-  if (vgaflg == 0)movkaderbuf->draw(*vidblitbuf, 0, 0, 0, 0, 400, 480);
+  if (vgaflg == 0)movkaderbuf->draw(*vidblitbuf, 0, 0, 0, 0, 400, renderHeight);
   video->swap();
 
 //  log_out("opened moviefile: %s",movname);
@@ -1269,7 +1269,7 @@ HEARTBEAT_FN MC_showdemopic(void)
       video->swap();
       video->scansync();
       video->clear(0);
-      demopic->draw(*vidblitbuf, 0, 0, 0, 0, 400, 480);
+      demopic->draw(*vidblitbuf, 0, 0, 0, 0, 400, renderHeight);
       video->palette(gamepal);
     }
 
@@ -1304,7 +1304,7 @@ HEARTBEAT_FN MC_showfirstdemopic(void)
       video->swap();
       video->scansync();
       video->clear(0);
-      demopic->draw(*vidblitbuf, 0, 0, 0, 0, 400, 480);
+      demopic->draw(*vidblitbuf, 0, 0, 0, 0, 400, renderHeight);
       video->palette(gamepal);
     }
 
@@ -1484,15 +1484,15 @@ HEARTBEAT_FN MC_nextlevel(void)
     alldiamspic = new Cblitbuf ("alldiams.pcx", 0, 0);
 	alldiamflg = 1;
     video->clear(0);
-    alldiamspic->draw(*vidblitbuf, 0, 0, 0, 0, 400, 480);
+    alldiamspic->draw(*vidblitbuf, 0, 0, 0, 0, 400, renderHeight);
     video->palette(alldiamspal);
     video->swap();
     video->clear(0);
-    alldiamspic->draw(*vidblitbuf, 0, 0, 0, 0, 400, 480);
+    alldiamspic->draw(*vidblitbuf, 0, 0, 0, 0, 400, renderHeight);
     video->palette(alldiamspal);
     video->swap();
     video->clear(0);
-    alldiamspic->draw(*vidblitbuf, 0, 0, 0, 0, 400, 480);
+    alldiamspic->draw(*vidblitbuf, 0, 0, 0, 0, 400, renderHeight);
     video->palette(alldiamspal);
     video->swap();
     return (HEARTBEAT_FN) MC_alldiams;
@@ -2042,7 +2042,7 @@ HEARTBEAT_FN MC_endtitle(void)
   if (eventcnt > 540)
     {
       //      video->clear(0);
-      demopic->draw(*player1.loadedmap->blitbuf,0,0,0,0,400,480);
+      demopic->draw(*player1.loadedmap->blitbuf,0,0,0,0,400,renderHeight);
     }
 
   if (eventcnt == 538)       video->palette(gamepal);
@@ -2217,7 +2217,7 @@ HEARTBEAT_FN MC_endtitle2(void)
   if (eventcnt > 540)
     {
       //      video->clear(0);
-      demopic->draw(*player1.loadedmap->blitbuf,0,0,0,0,400,480);
+      demopic->draw(*player1.loadedmap->blitbuf,0,0,0,0,400,renderHeight);
     }
 
   if (eventcnt == 538)       video->palette(gamepal);
@@ -2298,7 +2298,7 @@ HEARTBEAT_FN MC_startsampler(void)
       video->swap();
       video->scansync();
       video->clear(0);
-      demopic->draw(*vidblitbuf, 0, 0, 0, 0, 400, 480);
+      demopic->draw(*vidblitbuf, 0, 0, 0, 0, 400, renderHeight);
       video->palette(gamepal);
     }
 
@@ -2357,7 +2357,7 @@ HEARTBEAT_FN MC_soundsampler(void)
     video->swap();
     video->scansync();
     video->clear(0);
-    demopic->draw(*vidblitbuf, 0, 0, 0, 0, 400, 480);
+    demopic->draw(*vidblitbuf, 0, 0, 0, 0, 400, renderHeight);
   }
       
       delete demopic;
@@ -2415,7 +2415,7 @@ HEARTBEAT_FN MC_prependofdemo2(void)
       video->swap();
       video->scansync();
       video->clear(0);
-      demopic->draw(*vidblitbuf, 0, 0, 0, 0, 400, 480);
+      demopic->draw(*vidblitbuf, 0, 0, 0, 0, 400, renderHeight);
     }
   
   delete demopic;
@@ -2992,10 +2992,10 @@ void checkhol(void)
 
     if ((leveldelay & 31) == 0) nosound = 0;
 
-//    if ((leveldelay & 1) == 0) plof_init(MC_RANDOM(400)+player1.worldx, MC_RANDOM(480)+player1.worldy, 0, 0, 0, 0, nosound);
+//    if ((leveldelay & 1) == 0) plof_init(MC_RANDOM(400)+player1.worldx, MC_RANDOM(renderHeight)+player1.worldy, 0, 0, 0, 0, nosound);
     if (leveldelay < 250)
 	{
-		plof_init(MC_RANDOM(400)+player1.worldx, MC_RANDOM(480)+player1.worldy, 0, 0, 0, 0, nosound);
+		plof_init(MC_RANDOM(400)+player1.worldx, MC_RANDOM(renderHeight)+player1.worldy, 0, 0, 0, 0, nosound);
         player1.quakex = MC_RANDOM(16);
         player1.quakey = MC_RANDOM(16);
 	}
@@ -6439,7 +6439,7 @@ HEARTBEAT_FN MC_showentername(void)
   UINT16 i;
 
   log_out("point1");
-  highpic->draw_nokey(*refreshpic, 0, 0, 0, 0, 400, 480);
+  highpic->draw_nokey(*refreshpic, 0, 0, 0, 0, 400, renderHeight);
   log_out("point2");
 
   for (i =0; i < 20; i++)
@@ -6447,7 +6447,7 @@ HEARTBEAT_FN MC_showentername(void)
       video->swap();
       video->scansync();
       video->clear(0);
-      refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, 480);
+      refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, renderHeight);
     }
   log_out("point3");
 
@@ -6496,7 +6496,7 @@ HEARTBEAT_FN MC_entername(void)
 {
   video->swap();
   video->scansync();
-  refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, 480);
+  refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, renderHeight);
 
   handleinputloop();
 
@@ -6767,14 +6767,14 @@ HEARTBEAT_FN MC_showtitlesequence1(void)
 {
   UINT16 i;
   printf("show title seq 1\n");
-  titlepic->draw_nokey(*refreshpic, 0, 0, 0, 0, 400, 480);
+  titlepic->draw_nokey(*refreshpic, 0, 0, 0, 0, 400, renderHeight);
 
   for (i =0; i < 20; i++)
     {
       video->swap();
       video->scansync();
       video->clear(0);
-      refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, 480);
+      refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, renderHeight);
     }
 
   memcpy(gamepal, titlepal, 768);
@@ -6803,7 +6803,7 @@ HEARTBEAT_FN MC_showtitlesequence1(void)
 HEARTBEAT_FN MC_titlesequence1(void)
 {
 
-  refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, 480);
+  refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, renderHeight);
   video->swap();
   video->scansync();
 
@@ -6873,7 +6873,7 @@ HEARTBEAT_FN MC_options(void)
 {
   video->swap();
   video->scansync();
-  refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, 480);
+  refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, renderHeight);
 
   handleinput1shot();
 
@@ -6899,7 +6899,7 @@ HEARTBEAT_FN MC_menu(void)
 
   video->swap();
   video->scansync();
-  refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, 480);
+  refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, renderHeight);
 
   handleinput1shot();
 
@@ -6910,7 +6910,7 @@ HEARTBEAT_FN MC_menu(void)
 	keytab[VK_ESCAPE] = 0;
     if (menupoint == menu1)
 	{
-      titlepic->draw_nokey(*refreshpic, 0, 0, 0, 0, 400, 480);
+      titlepic->draw_nokey(*refreshpic, 0, 0, 0, 0, 400, renderHeight);
       menuleavefunc = (HEARTBEAT_FN) MC_leavemenu;
 	}
     if (menupoint == menu12 || menupoint == menu13)
@@ -7017,7 +7017,7 @@ HEARTBEAT_FN MC_menu(void)
   if (menutimeout==0)
   {
     menutimeout = 1000;
-    titlepic->draw_nokey(*refreshpic, 0, 0, 0, 0, 400, 480);
+    titlepic->draw_nokey(*refreshpic, 0, 0, 0, 0, 400, renderHeight);
     menuleavefunc = (HEARTBEAT_FN) MC_leavemenu;
     if (menuleavefunc) return (HEARTBEAT_FN) menuleavefunc;
   }
@@ -7298,7 +7298,7 @@ void menuf132(void)
 
 void menuf14(void)
 {
-//  titlepic->draw(*refreshpic, 0, 0, 0, 0, 400, 480);
+//  titlepic->draw(*refreshpic, 0, 0, 0, 0, 400, renderHeight);
 //  menuleavefunc = (HEARTBEAT_FN) MC_leavemenu;
 
   fadereturn = (HEARTBEAT_FN) MC_startdemo;
@@ -7410,7 +7410,7 @@ HEARTBEAT_FN MC_buildmenu(void)
 
   if (menupoint != enter_menu)  // niet echt geweledig mooi... magoed, deadlines enzo..
     {
-      titlepic->draw_nokey(*refreshpic, 0, 160, 0, 160, 400, 480);
+      titlepic->draw_nokey(*refreshpic, 0, 160, 0, 160, 400, renderHeight);
     }
 
   itemcnt = 0;
@@ -7458,7 +7458,7 @@ HEARTBEAT_FN MC_leavemenu(void)
 {
   video->swap();
   video->scansync();
-  refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, 480);
+  refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, renderHeight);
 
   if (darken < 256)
     {
@@ -7478,14 +7478,14 @@ HEARTBEAT_FN MC_showcredz1(void)
 {
   UINT16 i;
 
-  highpic->draw_nokey(*refreshpic, 0, 0, 0, 0, 400, 480);
+  highpic->draw_nokey(*refreshpic, 0, 0, 0, 0, 400, renderHeight);
 
   for (i =0; i < 20; i++)
     {
       video->swap();
       video->scansync();
       video->clear(0);
-      refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, 480);
+      refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, renderHeight);
     }
 
   memcpy(gamepal, highpal, 768);
@@ -7508,7 +7508,7 @@ HEARTBEAT_FN MC_credz1(void)
 {
   video->swap();
   video->scansync();
-  refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, 480);
+  refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, renderHeight);
 
   handleinput1shot();
 
@@ -7557,14 +7557,14 @@ HEARTBEAT_FN MC_showtitlesequence2(void)
 {
   UINT16 i;
 
-  titlepic->draw_nokey(*refreshpic, 0, 0, 0, 0, 400, 480);
+  titlepic->draw_nokey(*refreshpic, 0, 0, 0, 0, 400, renderHeight);
 
   for (i =0; i < 20; i++)
     {
       video->swap();
       video->scansync();
       video->clear(0);
-      refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, 480);
+      refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, renderHeight);
     }
 
   memcpy(gamepal, titlepal, 768);
@@ -7589,7 +7589,7 @@ HEARTBEAT_FN MC_showtitlesequence2(void)
 
 HEARTBEAT_FN MC_titlesequence2(void)
 {
-  refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, 480);
+  refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, renderHeight);
   video->swap();
   video->scansync();
 
@@ -7626,14 +7626,14 @@ HEARTBEAT_FN MC_showhighscore(void)
 {
   UINT16 i;
 
-  highpic->draw_nokey(*refreshpic, 0, 0, 0, 0, 400, 480);
+  highpic->draw_nokey(*refreshpic, 0, 0, 0, 0, 400, renderHeight);
 
   for (i =0; i < 20; i++)
     {
       video->swap();
       video->scansync();
       video->clear(0);
-      refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, 480);
+      refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, renderHeight);
     }
 
   memcpy(gamepal, highpal, 768);
@@ -7655,7 +7655,7 @@ HEARTBEAT_FN MC_highscore(void)
 {
   video->swap();
   video->scansync();
-  refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, 480);
+  refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, renderHeight);
 
   handleinput1shot();
 
@@ -7701,14 +7701,14 @@ HEARTBEAT_FN MC_showtitlesequence3(void)
 {
   UINT16 i;
 
-  titlepic->draw_nokey(*refreshpic, 0, 0, 0, 0, 400, 480);
+  titlepic->draw_nokey(*refreshpic, 0, 0, 0, 0, 400, renderHeight);
 
   for (i =0; i < 20; i++)
     {
       video->swap();
       video->scansync();
       video->clear(0);
-      refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, 480);
+      refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, renderHeight);
     }
 
   memcpy(gamepal, titlepal, 768);
@@ -7733,7 +7733,7 @@ HEARTBEAT_FN MC_showtitlesequence3(void)
 
 HEARTBEAT_FN MC_titlesequence3(void)
 {
-  refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, 480);
+  refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, renderHeight);
   video->swap();
   video->scansync();
 
@@ -7770,14 +7770,14 @@ HEARTBEAT_FN MC_showcredz2(void)
 {
   UINT16 i;
 
-  highpic->draw_nokey(*refreshpic, 0, 0, 0, 0, 400, 480);
+  highpic->draw_nokey(*refreshpic, 0, 0, 0, 0, 400, renderHeight);
 
   for (i =0; i < 20; i++)
     {
       video->swap();
       video->scansync();
       video->clear(0);
-      refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, 480);
+      refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, renderHeight);
     }
 
   memcpy(gamepal, highpal, 768);
@@ -7798,7 +7798,7 @@ HEARTBEAT_FN MC_credz2(void)
 {
   video->swap();
   video->scansync();
-  refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, 480);
+  refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, renderHeight);
 
   handleinput1shot();
 
@@ -7851,7 +7851,7 @@ HEARTBEAT_FN MC_luxaflex(void)
 
   video->swap();
   video->scansync();
-  refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, 480);
+  refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, renderHeight);
 
   for (i=0; i<14; i++)
     {
@@ -7880,14 +7880,14 @@ HEARTBEAT_FN MC_showcredz3(void)
 {
 
 #if 0
-  highpic->draw_nokey(*refreshpic, 0, 0, 0, 0, 400, 480);
+  highpic->draw_nokey(*refreshpic, 0, 0, 0, 0, 400, renderHeight);
 
   for (i =0; i < 20; i++)
     {
       video->swap();
       video->scansync();
       video->clear(0);
-      refreshpic->draw(*vidblitbuf, 0, 0, 0, 0, 400, 480);
+      refreshpic->draw(*vidblitbuf, 0, 0, 0, 0, 400, renderHeight);
     }
 
   memcpy(gamepal, highpal, 768);
@@ -7912,7 +7912,7 @@ HEARTBEAT_FN MC_credz3(void)
 {
   video->swap();
   video->scansync();
-  refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, 480);
+  refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, renderHeight);
 
   letterswirlscan();
   letterswirlin();
@@ -7961,14 +7961,14 @@ HEARTBEAT_FN MC_showcredz4(void)
 {
 
 #if 0
-  highpic->draw_nokey(*refreshpic, 0, 0, 0, 0, 400, 480);
+  highpic->draw_nokey(*refreshpic, 0, 0, 0, 0, 400, renderHeight);
 
   for (i =0; i < 20; i++)
     {
       video->swap();
       video->scansync();
       video->clear(0);
-      refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, 480);
+      refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, renderHeight);
     }
 
   memcpy(gamepal, highpal, 768);
@@ -7993,7 +7993,7 @@ HEARTBEAT_FN MC_credz4(void)
 {
   video->swap();
   video->scansync();
-  refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, 480);
+  refreshpic->draw_nokey(*vidblitbuf, 0, 0, 0, 0, 400, renderHeight);
 
   letterswirlscan();
   letterswirlin();
@@ -8261,7 +8261,7 @@ HEARTBEAT_FN MC_preppuzzleselect(void)
 
 	LOG("H\n");
   video->DrawLoading();
-  puzzlepic = new Cblitbuf(400,480,0,0);
+  puzzlepic = new Cblitbuf(400,renderHeight,0,0);
 	LOG("I\n");
   for (i=0; i<26; i++)
   { 
@@ -8360,7 +8360,7 @@ HEARTBEAT_FN MC_puzzleselect(void)
     puzzleactiveflg = 1;
   video->swap();
   video->scansync();
-  puzzlepic->draw(*vidblitbuf, 0, 0, 0, 0, 400, 480);
+  puzzlepic->draw(*vidblitbuf, 0, 0, 0, 0, 400, renderHeight);
 
   handleinput1shot();
 
@@ -8526,7 +8526,7 @@ HEARTBEAT_FN MC_puzzleshow(void)
 {
   video->swap();
   video->scansync();
-  puzzlepic->draw(*vidblitbuf, 0, 0, 0, 0, 400, 480);
+  puzzlepic->draw(*vidblitbuf, 0, 0, 0, 0, 400, renderHeight);
 
   handleinput1shot();
 
@@ -8562,13 +8562,13 @@ HEARTBEAT_FN MC_endpuzzle(void)
 {
   video->swap();
   video->scansync();
-  puzzlepic->draw(*vidblitbuf, 0, 0, 0, 0, 400, 480);
+  puzzlepic->draw(*vidblitbuf, 0, 0, 0, 0, 400, renderHeight);
   video->swap();
   video->scansync();
-  puzzlepic->draw(*vidblitbuf, 0, 0, 0, 0, 400, 480);
+  puzzlepic->draw(*vidblitbuf, 0, 0, 0, 0, 400, renderHeight);
   video->swap();
   video->scansync();
-  puzzlepic->draw(*vidblitbuf, 0, 0, 0, 0, 400, 480);
+  puzzlepic->draw(*vidblitbuf, 0, 0, 0, 0, 400, renderHeight);
 
   killpuzzle();
   return (HEARTBEAT_FN) MC_loadlevel;
@@ -8578,13 +8578,13 @@ HEARTBEAT_FN MC_abortpuzzle(void)
 {
   video->swap();
   video->scansync();
-  puzzlepic->draw(*vidblitbuf, 0, 0, 0, 0, 400, 480);
+  puzzlepic->draw(*vidblitbuf, 0, 0, 0, 0, 400, renderHeight);
   video->swap();
   video->scansync();
-  puzzlepic->draw(*vidblitbuf, 0, 0, 0, 0, 400, 480);
+  puzzlepic->draw(*vidblitbuf, 0, 0, 0, 0, 400, renderHeight);
   video->swap();
   video->scansync();
-  puzzlepic->draw(*vidblitbuf, 0, 0, 0, 0, 400, 480);
+  puzzlepic->draw(*vidblitbuf, 0, 0, 0, 0, 400, renderHeight);
 
   killpuzzle();
   return (HEARTBEAT_FN) MC_preptitlesequence;

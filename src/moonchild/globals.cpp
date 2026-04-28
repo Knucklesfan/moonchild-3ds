@@ -40,7 +40,7 @@ UINT16 mouselbut = 0;
 UINT16 mouserbut = 0;
 UINT16 mouselchng = 0;
 UINT16 mouserchng = 0;
-
+UINT16 renderHeight = 480;
 UINT16 realxcnt = 0;       // for score board wobbles
 UINT16 realycnt = 0;
 UINT16 extralivefloat = 0; // for floating extra life heart!
@@ -65,7 +65,7 @@ UINT32 blackdiamondcollocations[13][7]; //7 per level... 13 levels
 UINT16 cliptlx = 0;
 UINT16 cliptly = 0;
 UINT16 clipbrx = 400;
-UINT16 clipbry = 480;
+UINT16 clipbry = renderHeight;
 
 UINT16 sokomoved;
 UINT16 editflg = 0;            /* we don't start of in the editor */

@@ -15,7 +15,7 @@ extern BYTE    pal[3*256];
 
 extern Cblitbuf *para;
 extern Cblitbuf *vidblitbuf;
-
+extern UINT16 renderHeight;
 
 extern VG_DLL_LIST *allframes;
 extern VG_DLL_LIST *allsequences;
