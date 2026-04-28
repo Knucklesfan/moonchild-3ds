@@ -17,8 +17,8 @@
 namespace {
 
 int screenWidth = 400;
-int bottomWidth = 320;
-int screenHeight = 240;
+int realHeight = 240;
+int screenHeight = realHeight*2; //this is the height to render at for both the touch screen and the regular screen
 int bytesPerPixel = 4;
 int ticksPerSecond = 60;
 
@@ -31,11 +31,11 @@ Uint64 nextTickTime = 0;
 // SDL_Texture *frameTexture = nullptr;
 
 u8 *pixelBuffer = nullptr;
-u8 *rightBuffer = nullptr;
-u8 *bottomBuffer = nullptr;
+// u8 *rightBuffer = nullptr;
+// u8 *bottomBuffer = nullptr;
 
 int pixelBufferPitch = 0;
-int bottomBufferPitch = 0;
+// int bottomBufferPitch = 0;
 #define JOY_A     0
 #define JOY_B     1
 #define JOY_X     2
@@ -89,18 +89,18 @@ bool initSDL() {
     nextTickTime = SDL_GetPerformanceCounter();
 
     pixelBufferPitch = screenWidth * bytesPerPixel;
-    bottomBufferPitch = bottomWidth * bytesPerPixel;
+    // bottomBufferPitch = bottomWidth * bytesPerPixel;
     
     pixelBuffer = new uint8_t[pixelBufferPitch * screenHeight];
-    rightBuffer = new uint8_t[pixelBufferPitch * screenHeight];
-    bottomBuffer = new uint8_t[bottomBufferPitch * screenHeight];
+    // rightBuffer = new uint8_t[pixelBufferPitch * screenHeight];
+    // bottomBuffer = new uint8_t[bottomBufferPitch * screenHeight];
 
     memset(pixelBuffer, 0, pixelBufferPitch * screenHeight);
-    memset(rightBuffer, 0, pixelBufferPitch * screenHeight);
-    memset(bottomBuffer, 0, bottomBufferPitch * screenHeight);
+    // memset(rightBuffer, 0, pixelBufferPitch * screenHeight);
+    // memset(bottomBuffer, 0, bottomBufferPitch * screenHeight);
 
     gfxInitDefault();
-    gfxSet3D(true); // Activate stereoscopic 3D
+    // gfxSet3D(true); // Activate stereoscopic 3D
 
 	  gfxSetDoubleBuffering(GFX_TOP, true);
 	  gfxSetDoubleBuffering(GFX_BOTTOM, true);
@@ -130,24 +130,33 @@ void shutdownSDL() {
 }
 void renderFb(u8* pixelBuffer, gfx3dSide_t screen, gfxScreen_t position, int width, int height) {
   u8* fb = gfxGetFramebuffer(position, screen, NULL, NULL);
-  const int inStride  = screenWidth * 4;
-  const int outStride = screenHeight * 3;
-  for (int x = 0; x < screenWidth; ++x) {
-      unsigned char *out = fb + x * outStride;
-      const unsigned char *inRow = pixelBuffer + (screenHeight - 1) * inStride + x * 4;
-      for (int y = 0; y < screenHeight; ++y) {
-          out[0] = inRow[0];
-          out[1] = inRow[1];
-          out[2] = inRow[2];
-          out += 3;
-          inRow -= inStride; // move up one input row since we're at the bottom
-      }
-  }  // memcpy(fb, pixelBuffer, screenWidth * bytesPerPixel * screenHeight);
-
+  // const int inStride  = screenWidth * 4;
+  // const int outStride = realHeight * 3;
+  // for (int x = 0; x < width; ++x) {
+  //     unsigned char *out = fb + (x+(position==GFX_BOTTOM?(screenWidth-width)/2:0)) * outStride;
+  //     const unsigned char *inRow = pixelBuffer + ((position==GFX_BOTTOM?(screenHeight):realHeight) - 1) * inStride + (x+(position==GFX_BOTTOM?(realHeight):0)) * 4;
+  //     for (int y = 0; y < realHeight; ++y) {
+  //         out[0] = inRow[0];
+  //         out[1] = inRow[1];
+  //         out[2] = inRow[2];
+  //         out += 3;
+  //         inRow -= inStride; // move up one input row since we're at the bottom
+  //     }
+  // }  // memcpy(fb, pixelBuffer, screenWidth * bytesPerPixel * screenHeight);
+  for(int x= 0; x < screenWidth; x++) {
+    int othery = 0;
+    for(int y = (position==GFX_BOTTOM?(screenHeight):realHeight); y > (position==GFX_BOTTOM?(realHeight):0); y--) {
+      fb[x*(realHeight*3)+othery*3] = pixelBuffer[(y*(screenWidth*4))+x*4]; 
+      fb[x*(realHeight*3)+othery*3+1] = pixelBuffer[y*(screenWidth*4)+x*4+1]; 
+      fb[x*(realHeight*3)+othery*3+2] = pixelBuffer[y*(screenWidth*4)+x*4+2];
+      othery++;
+    }
+  }
 }
 void presentFrame() {
-  renderFb(rightBuffer,GFX_RIGHT,GFX_TOP, screenWidth, screenHeight);
+  // renderFb(rightBuffer,GFX_RIGHT,GFX_TOP, screenWidth, screenHeight);
   renderFb(pixelBuffer,GFX_LEFT,GFX_TOP, screenWidth, screenHeight);
+  renderFb(pixelBuffer,GFX_LEFT,GFX_BOTTOM, 320, screenHeight);
 
   gfxFlushBuffers();
   gfxSwapBuffers();
