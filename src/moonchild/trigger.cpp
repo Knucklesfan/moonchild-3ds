@@ -10,7 +10,7 @@
 #include <stukhout.hpp>
 #include <sokoban.hpp>
 #include <sound.hpp>
-
+#include <SDL.h>
 
 void trig_close_hole(UINT16 x, UINT16 y, UINT16 pat, UINT16 amount);
 
@@ -62,6 +62,7 @@ void sneaktransfer_11(void)
 
 void madeit_11(void)
 {
+  //printf("made it!\n");
   play_madeit();
   mc_autorun = 1;  //moonchild loopt automatisch naar rechts
 }
@@ -69,16 +70,21 @@ void madeit_11(void)
 
 void reallymadeit_11(void)
 {
+  //printf("really made it!\n");
+
   if(nextlvlflg == 0 && nextdelay == 0)
   {
-    nextdelay = 200;
+    nextdelay = SDL_GetTicks();
     //    player1.score += 5000;
   }
 
   if (nextdelay)
   {
+    //printf("retick %d!\n",nextdelay);
+
     nextdelay--;
-    if (nextdelay == 0) nextlvlflg = 1;
+    if (SDL_GetTicks()-nextdelay >= 50) {nextlvlflg = 1;nextdelay = 0;}
+
   }
 }
 
@@ -92,16 +98,18 @@ void madeit_00(void)
 
 void reallymadeit_00(void)
 {
+  //printf("reallymadeit");
   if(nextlvlflg == 0 && nextdelay == 0)
   {
-    nextdelay = 200;
+    nextdelay = SDL_GetTicks();
     //    player1.score += 5000;
   }
 
   if (nextdelay)
   {
     nextdelay--;
-    if (nextdelay == 0) nextlvlflg = 1;
+    if (SDL_GetTicks()-nextdelay >= 50) {nextlvlflg = 1;nextdelay = 0;}
+
   }
 }
 
@@ -117,14 +125,14 @@ void reallymadeit_12(void)
 {
   if(nextlvlflg == 0 && nextdelay == 0)
   {
-    nextdelay = 200;
+    nextdelay = SDL_GetTicks();
     //    player1.score += 5000;
   }
 
   if (nextdelay)
   {
     nextdelay--;
-    if (nextdelay == 0) nextlvlflg = 1;
+    if (SDL_GetTicks()-nextdelay >= 50) {nextlvlflg = 1;nextdelay = 0;}
   }
 }
 
@@ -140,14 +148,15 @@ void reallymadeit_13(void)
 {
   if(nextlvlflg == 0 && nextdelay == 0)
   {
-    nextdelay = 200;
+    nextdelay = SDL_GetTicks();
     //    player1.score += 5000;
   }
 
   if (nextdelay)
   {
     nextdelay--;
-    if (nextdelay == 0) nextlvlflg = 1;
+    if (SDL_GetTicks()-nextdelay >= 50) {nextlvlflg = 1;nextdelay = 0;}
+
   }
 }
 
@@ -264,7 +273,7 @@ void warp_13(void)
 
   if(nextlvlflg == 0 && nextdelay == 0)
   {
-    nextdelay = 200;
+    nextdelay = SDL_GetTicks();
   play_madeit();
     //    player1.score += 5000;
   }
@@ -272,7 +281,8 @@ void warp_13(void)
   if (nextdelay)
   {
     nextdelay--;
-    if (nextdelay == 0) nextlvlflg = 1;
+    if (SDL_GetTicks()-nextdelay >= 50) {nextlvlflg = 1;nextdelay = 0;}
+
   }
 }
 
@@ -282,7 +292,7 @@ void warp_14(void)
 
   if(nextlvlflg == 0 && nextdelay == 0)
   {
-    nextdelay = 200;
+    nextdelay = SDL_GetTicks();
   play_madeit();
     //    player1.score += 5000;
   }
@@ -290,7 +300,8 @@ void warp_14(void)
   if (nextdelay)
   {
     nextdelay--;
-    if (nextdelay == 0) nextlvlflg = 1;
+    if (SDL_GetTicks()-nextdelay >= 50) {nextlvlflg = 1;nextdelay = 0;}
+
   }
 }
 
@@ -357,14 +368,15 @@ void reallymadeit_14(void)
 {
   if(nextlvlflg == 0 && nextdelay == 0)
   {
-    nextdelay = 200;
+    nextdelay = SDL_GetTicks();
     //    player1.score += 5000;
   }
 
   if (nextdelay)
   {
     nextdelay--;
-    if (nextdelay == 0) nextlvlflg = 1;
+    if (SDL_GetTicks()-nextdelay >= 50) {nextlvlflg = 1;nextdelay = 0;}
+
   }
 }
 
@@ -393,14 +405,15 @@ void reallymadeit_21(void)
 {
   if(nextlvlflg == 0 && nextdelay == 0)
   {
-    nextdelay = 200;
+    nextdelay = SDL_GetTicks();
     //    player1.score += 5000;
   }
 
   if (nextdelay)
   {
     nextdelay--;
-    if (nextdelay == 0) nextlvlflg = 1;
+    if (SDL_GetTicks()-nextdelay >= 50) {nextlvlflg = 1;nextdelay = 0;}
+
   }
 }
 
@@ -564,7 +577,7 @@ void warp_22(void)
 
   if(nextlvlflg == 0 && nextdelay == 0)
   {
-    nextdelay = 200;
+    nextdelay = SDL_GetTicks();
   play_madeit();
     //    player1.score += 5000;
   }
@@ -572,7 +585,8 @@ void warp_22(void)
   if (nextdelay)
   {
     nextdelay--;
-    if (nextdelay == 0) nextlvlflg = 1;
+    if (SDL_GetTicks()-nextdelay >= 50) {nextlvlflg = 1;nextdelay = 0;}
+
   }
 }
 
@@ -588,14 +602,15 @@ void reallymadeit_22(void)
 {
   if(nextlvlflg == 0 && nextdelay == 0)
   {
-    nextdelay = 200;
+    nextdelay = SDL_GetTicks();
     //    player1.score += 5000;
   }
 
   if (nextdelay)
   {
     nextdelay--;
-    if (nextdelay == 0) nextlvlflg = 1;
+    if (SDL_GetTicks()-nextdelay >= 50) {nextlvlflg = 1;nextdelay = 0;}
+
   }
 }
 
@@ -647,14 +662,15 @@ void reallymadeit_23(void)
 {
   if(nextlvlflg == 0 && nextdelay == 0)
   {
-    nextdelay = 200;
+    nextdelay = SDL_GetTicks();
     //    player1.score += 5000;
   }
 
   if (nextdelay)
   {
     nextdelay--;
-    if (nextdelay == 0) nextlvlflg = 1;
+    if (SDL_GetTicks()-nextdelay >= 50) {nextlvlflg = 1;nextdelay = 0;}
+
   }
 }
 
@@ -752,14 +768,15 @@ void reallymadeit_31(void)
 {
   if(nextlvlflg == 0 && nextdelay == 0)
   {
-    nextdelay = 200;
+    nextdelay = SDL_GetTicks();
     //    player1.score += 5000;
   }
 
   if (nextdelay)
   {
     nextdelay--;
-    if (nextdelay == 0) nextlvlflg = 1;
+    if (SDL_GetTicks()-nextdelay >= 50) {nextlvlflg = 1;nextdelay = 0;}
+
   }
 }
 
@@ -909,14 +926,15 @@ void reallymadeit_32(void)
 {
   if(nextlvlflg == 0 && nextdelay == 0)
   {
-    nextdelay = 200;
+    nextdelay = SDL_GetTicks();
     //    player1.score += 5000;
   }
 
   if (nextdelay)
   {
     nextdelay--;
-    if (nextdelay == 0) nextlvlflg = 1;
+    if (SDL_GetTicks()-nextdelay >= 50) {nextlvlflg = 1;nextdelay = 0;}
+
   }
 }
 
@@ -971,14 +989,15 @@ void reallymadeit_33(void)
 {
   if(nextlvlflg == 0 && nextdelay == 0)
   {
-    nextdelay = 200;
+    nextdelay = SDL_GetTicks();
     //    player1.score += 5000;
   }
 
   if (nextdelay)
   {
     nextdelay--;
-    if (nextdelay == 0) nextlvlflg = 1;
+    if (SDL_GetTicks()-nextdelay >= 50) {nextlvlflg = 1;nextdelay = 0;}
+
   }
 }
 
@@ -1015,14 +1034,15 @@ void reallymadeit_34(void)
 {
   if(nextlvlflg == 0 && nextdelay == 0)
   {
-    nextdelay = 200;
+    nextdelay = SDL_GetTicks();
     //    player1.score += 5000;
   }
 
   if (nextdelay)
   {
     nextdelay--;
-    if (nextdelay == 0) nextlvlflg = 1;
+    if (SDL_GetTicks()-nextdelay >= 50) {nextlvlflg = 1;nextdelay = 0;}
+
   }
 }
 
@@ -1165,6 +1185,7 @@ void reallymadeit_41(void)
   if (nextdelay)
   {
     nextdelay--;
-    if (nextdelay == 0) nextlvlflg = 1;
+    if (SDL_GetTicks()-nextdelay >= 50) {nextlvlflg = 1;nextdelay = 0;}
+
   }
 }

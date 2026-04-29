@@ -177,6 +177,7 @@ void keyDown(int key) {
       break;
     case SDL_SCANCODE_ESCAPE:  // break out of level
       framework_EventHandle(FW_KEYDOWN,(int) 'Q');
+      cheatmode = 1;
       break;
     case SDL_SCANCODE_E:  // If editor is compiled (define in mc.cpp) then this is the key to show it
       framework_EventHandle(FW_KEYDOWN,(int) 'E');

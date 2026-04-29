@@ -105,7 +105,7 @@ bool initSDL() {
 
 	  gfxSetDoubleBuffering(GFX_TOP, true);
 	  gfxSetDoubleBuffering(GFX_BOTTOM, true);
-
+    
     // consoleInit(GFX_BOTTOM, NULL);
 
     return true;
@@ -200,15 +200,15 @@ void syncMouse() {
 int SDL_main(int argc, char **argv) {
   Result rc = romfsInit();
 
-  printf("initializing game");
+  //printf("initializing game");
   if (!initSDL()) {
-    printf("unable to init sdl");
+    //printf("unable to init sdl");
     shutdownSDL();
     return 1;
   }
 
   if (!initAudio()) {
-    printf("unable to init audio");
+    //printf("unable to init audio");
 
     shutdownAudio();
     shutdownSDL();
@@ -218,12 +218,12 @@ int SDL_main(int argc, char **argv) {
   // if (zed_net_init() < 0) {
   //   fprintf(stderr, "zed_net init failed: %s\n", zed_net_get_error());
   // }
-  printf("initializing moonchild\n");
-	if (rc)
+  //printf("initializing moonchild\n");
+	if (rc) 
 		printf("romfsInit: %08lX\n", rc);
 	else
 	{
-    printf("romfs initialized successfully\n");
+    //printf("romfs initialized successfully\n");
 	FILE* f = fopen("romfs:/mc.txt", "r");
 	if (f)
 	{
@@ -242,7 +242,7 @@ int SDL_main(int argc, char **argv) {
 		fclose(f);
 	}
 
-    printf("dir closed\n");
+    //printf("dir closed\n");
 
   }
 
@@ -250,7 +250,7 @@ int SDL_main(int argc, char **argv) {
 
   bool running = true;
   while (running) {
-    // printf("looping");
+    // //printf("looping");
     // SDL_Event e;
     // while (SDL_PollEvent(&e)) {
     //   if (e.type == SDL_QUIT) {
@@ -322,38 +322,38 @@ int SDL_main(int argc, char **argv) {
     //     }
     //   }
     //   if (e.type == SDL_JOYBUTTONDOWN ) {
-    //     printf("%d\n",e.cbutton.button);
+    //     //printf("%d\n",e.cbutton.button);
     //     switch (e.cbutton.button) {
     //       case JOY_UP:
-    //         printf("SDL_SCANCODE_UP\n");
+    //         //printf("SDL_SCANCODE_UP\n");
     //         keyDown(SDL_SCANCODE_UP);
     //         break;
     //       case JOY_DOWN:
-    //         printf("SDL_SCANCODE_DOWN\n");
+    //         //printf("SDL_SCANCODE_DOWN\n");
     //         keyDown(SDL_SCANCODE_DOWN);
     //         break;
     //       case JOY_LEFT:
-    //         printf("SDL_SCANCODE_LEFT\n");
+    //         //printf("SDL_SCANCODE_LEFT\n");
     //         keyDown(SDL_SCANCODE_LEFT);
     //         break;
     //       case JOY_RIGHT:
-    //         printf("SDL_SCANCODE_RIGHT\n");
+    //         //printf("SDL_SCANCODE_RIGHT\n");
     //         keyDown(SDL_SCANCODE_RIGHT);
     //         break;
     //       case JOY_A:
-    //         printf("SDL_SCANCODE_UP\n");
+    //         //printf("SDL_SCANCODE_UP\n");
     //         keyDown(SDL_SCANCODE_UP);
     //         break;
     //       case JOY_X:
-    //         printf("SDL_SCANCODE_SPACE\n");
+    //         //printf("SDL_SCANCODE_SPACE\n");
     //         keyDown(SDL_SCANCODE_SPACE);
     //         break;
     //       case JOY_PLUS:
-    //         printf("SDL_SCANCODE_SPACE\n");
+    //         //printf("SDL_SCANCODE_SPACE\n");
     //         keyDown(SDL_SCANCODE_SPACE);
     //         break;
     //       case JOY_L:
-    //         printf("SDL_SCANCODE_ESCAPE\n");
+    //         //printf("SDL_SCANCODE_ESCAPE\n");
     //         keyDown(SDL_SCANCODE_ESCAPE);
 
     //         break;
@@ -404,28 +404,28 @@ int SDL_main(int argc, char **argv) {
 		u32 kUp = hidKeysUp();
 
     if (kDown & (1u << OFF_DUP) || kDown & (1u << OFF_CPAD_UP)) {
-      printf("SDL_SCANCODE_UP\n");
+      //printf("SDL_SCANCODE_UP\n");
       keyDown(SDL_SCANCODE_UP);
     } else if (kDown & (1u << OFF_DDOWN) || kDown & (1u << OFF_CPAD_DOWN)) {
-      printf("SDL_SCANCODE_DOWN\n");
+      //printf("SDL_SCANCODE_DOWN\n");
       keyDown(SDL_SCANCODE_DOWN);
     } else if (kDown & (1u << OFF_DLEFT) || kDown & (1u << OFF_CPAD_LEFT)) {
-      printf("SDL_SCANCODE_LEFT\n");
+      //printf("SDL_SCANCODE_LEFT\n");
       keyDown(SDL_SCANCODE_LEFT);
     } else if (kDown & (1u << OFF_DRIGHT) || kDown & (1u << OFF_CPAD_RIGHT)) {
-      printf("SDL_SCANCODE_RIGHT\n");
+      //printf("SDL_SCANCODE_RIGHT\n");
       keyDown(SDL_SCANCODE_RIGHT);
     } else if (kDown & ((1u << OFF_B) | (1u << OFF_A))) {
-      printf("SDL_SCANCODE_UP\n");
+      //printf("SDL_SCANCODE_UP\n");
       keyDown(SDL_SCANCODE_UP);
     } else if (kDown & ((1u << OFF_X) | (1u << OFF_Y))) {
-      printf("SDL_SCANCODE_SPACE\n");
+      //printf("SDL_SCANCODE_SPACE\n");
       keyDown(SDL_SCANCODE_SPACE);
     } else if (kDown & (1u << OFF_START)) {
-      printf("SDL_SCANCODE_SPACE\n");
+      //printf("SDL_SCANCODE_SPACE\n");
       keyDown(SDL_SCANCODE_SPACE);
     } else if (kDown & (1u << OFF_TOUCH)) {
-      printf("SDL_SCANCODE_ESCAPE\n");
+      //printf("SDL_SCANCODE_ESCAPE\n");
       keyDown(SDL_SCANCODE_ESCAPE);
     }
 

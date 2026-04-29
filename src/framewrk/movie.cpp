@@ -22,7 +22,7 @@ Cmovie::~Cmovie(void)
 
 Smack *Cmovie::open(char *filename)
 {
-    printf("trying to play movie: %s", filename);
+    //printf("trying to play movie: %s", filename);
     if(strcmp(filename, (char *)"intro.smk")==0)
     {
         this->videoFilename = "intro";
@@ -60,7 +60,7 @@ Smack *Cmovie::open(char *filename)
         return (Smack *)1;
     }
     
-    printf("Trying to play unknown moviefile!");
+    //printf("Trying to play unknown moviefile!");
     
 	return 0;
 }

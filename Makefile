@@ -219,7 +219,7 @@ endif
 
 COMMON_MAKEROM_PARAMS := -rsf $(RSF) -target t -exefslogo -elf $(OUTPUT_FILE).elf -icon icon.icn \
 -banner banner.bnr -DAPP_TITLE="$(APP_TITLE)" -DAPP_PRODUCT_CODE="$(APP_PRODUCT_CODE)" \
--DAPP_UNIQUE_ID="$(APP_UNIQUE_ID)" -DAPP_ROMFS="$(APP_ROMFS)" -DAPP_SYSTEM_MODE="64MB" \
+-DAPP_UNIQUE_ID="$(APP_UNIQUE_ID)" -romfs "romfs.bin" -DAPP_SYSTEM_MODE="64MB" \
 -DAPP_SYSTEM_MODE_EXT="Legacy" -major "$(APP_VERSION_MAJOR)" -minor "$(APP_VERSION_MINOR)" \
 -micro "$(APP_VERSION_MICRO)"
 
@@ -260,7 +260,7 @@ $(OUTPUT_FILE).3ds : $(OUTPUT_FILE).elf banner.bnr icon.icn
 	@$(MAKEROM) -f cci -o $(OUTPUT_FILE).3ds -DAPP_ENCRYPTED=true $(COMMON_MAKEROM_PARAMS)
 	@echo "built ... $(notdir $@)"
 
-$(OUTPUT_FILE).cia : $(OUTPUT_FILE).elf banner.bnr icon.icn
+$(OUTPUT_FILE).cia : $(OUTPUT_FILE).elf banner.bnr icon.icn romfs.bin
 	@$(MAKEROM) -f cia -o $(OUTPUT_FILE).cia -DAPP_ENCRYPTED=false $(COMMON_MAKEROM_PARAMS)
 	@echo "built ... $(notdir $@)"
 
@@ -291,7 +291,8 @@ elf : $(OUTPUT_FILE).elf
 
 citra : 3dsx
 	$(CITRA) $(OUTPUT_FILE).3dsx
-
+romfs.bin:
+	3dstool -ctf romfs romfs.bin --romfs-dir ../assets/moonchild
 release : $(OUTPUT_FILE).zip cia 3ds
 
 #---------------------------------------------------------------------------------

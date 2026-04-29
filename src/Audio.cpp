@@ -240,34 +240,34 @@ void playTestWavSound() {
   if (testWavAsset < 0) {
     testWavAsset = loadWaveSample(testWavPath);
     if (testWavAsset < 0) {
-      printf("test wav: still could not load %s\n", testWavPath);
+      //printf("test wav: still could not load %s\n", testWavPath);
       return;
     }
   }
   int channel = playWaveOneshot(testWavAsset);
   if (channel < 0) {
-    printf("test wav: could not play %s (no free channel?)\n", testWavPath);
+    //printf("test wav: could not play %s (no free channel?)\n", testWavPath);
     return;
   }
-  printf("test wav: played %s (channel %d)\n", testWavPath, channel);
+  //printf("test wav: played %s (channel %d)\n", testWavPath, channel);
 }
 
 void toggleTestMusic() {
   if (!testMusicLoaded) {
     if (!loadMusicFile(testMp3Path)) {
-      printf("test mp3: still could not load %s\n", testMp3Path);
+      //printf("test mp3: still could not load %s\n", testMp3Path);
       return;
     }
     testMusicLoaded = true;
     playMusicLooping();
-    printf("test mp3: started %s\n", testMp3Path);
+    //printf("test mp3: started %s\n", testMp3Path);
     return;
   }
   if (Mix_PlayingMusic()) {
     stopMusic();
-    printf("test mp3: stopped\n");
+    //printf("test mp3: stopped\n");
   } else {
     playMusicLooping();
-    printf("test mp3: started\n");
+    //printf("test mp3: started\n");
   }
 }

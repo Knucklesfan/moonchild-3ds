@@ -4,5 +4,7 @@
 # save data
 mc_high.dat
 mc_opts.dat
-output/moonchild-3ds.3dsx
-output/moonchild-3ds.elf
+*.3dsx
+*.cia
+*.smdh
+*.elf

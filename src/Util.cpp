@@ -168,7 +168,7 @@ char *FullWritablePath(char *filename) {
 typedef unsigned char BYTE;
 unsigned short*LoadTGA(char *FileName)
 {
-	printf("loading: %s\n", FullPath(FileName));
+	//printf("loading: %s\n", FullPath(FileName));
 //	LOG(logbuf);
     
 	// load targa file
@@ -176,7 +176,7 @@ unsigned short*LoadTGA(char *FileName)
 	bool OK = true;
   FILE *tga = fopen( FullPath(FileName), "rb" );
   if (!tga) return 0;
-  printf("tga opened?\n");
+  //printf("tga opened?\n");
   fread(tgabuff, 20, 1, tga);
   fclose(tga);
 	// gzFile tga = gzopen( FullPath(FileName), "rb" );
@@ -287,7 +287,7 @@ unsigned short*LoadTGA(char *FileName)
     
 	delete [] tgabuff;
     
-	printf("tga success\n");
+	//printf("tga success\n");
 	return dest;
 }
 

@@ -135,11 +135,11 @@ int FastFileInit( char *fname, int max_handles )
 
 	if(DecrunchBuffer)
 	{
-		printf("decrunchbuffer allocated\n");
+		//printf("decrunchbuffer allocated\n");
 	}
 	if(SourceBuffer)
 	{
-		printf("sourcebuffer allocated\n");
+		//printf("sourcebuffer allocated\n");
 	}
 
     /*
@@ -147,13 +147,13 @@ int FastFileInit( char *fname, int max_handles )
      */
     lpFH = (FILEHANDLE *)malloc(max_handles * sizeof( FILEHANDLE ) );
     if( lpFH == NULL ) {
-		printf("file handle array failed\n");
+		//printf("file handle array failed\n");
         return false;
     }
     memset(lpFH, 0, max_handles * sizeof(FILEHANDLE));
     dwFHCnt = max_handles;
 
-	printf("opening %s\n",fname);
+	//printf("opening %s\n",fname);
 	strcpy(FASTFILE_FILENAME, fname);
 //		LOG("opening fastfile\n");
 
@@ -178,7 +178,7 @@ int FastFileInit( char *fname, int max_handles )
 	}
 	else
 	{
-		printf("fastfile open failed\n");
+		//printf("fastfile open failed\n");
 
 //		LOG("fastfile open failed\n");
 	    return false;

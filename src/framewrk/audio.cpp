@@ -46,7 +46,7 @@ UINT16 Caudio::play_cd(UINT16 tracknr)
             volume = 1.0f;
             break;
         default:
-            printf("audio track %d requested", tracknr);
+            //printf("audio track %d requested", tracknr);
             break;
     }
     
